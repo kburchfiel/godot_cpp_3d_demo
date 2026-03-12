@@ -11,7 +11,7 @@ size = Vector3(60, 2, 60)
 [node name="Main" type="Node" unique_id=1929793096]
 
 [node name="Mnchar" type="Mnchar" parent="." unique_id=954470515]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9366754, 0.033563938, 0)
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.15699959, 1, 12)
 
 [node name="Pivot" type="Node3D" parent="Mnchar" unique_id=1340568476]
 

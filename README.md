@@ -22,6 +22,8 @@ This project is an opportunity for me to *learn* how to use GDExtension, togethe
 
     Note: I used the latest master version of this repository available on 2026-03-06 (9ae37ac). This particular version can be found [at this link](https://github.com/godotengine/godot-cpp/tree/9ae37ac8b9b14df5284dc3d4bf87e7d8b3327503).
 
+* My [C++-based Your First 2D Game tutorial (YF2DGC++)](https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/tree/main)--which is based heavily on [a similar tutorial by J-Dax for Godot 4.3](https://github.com/j-dax/gd-cpp). (That tutorial was released under the BSD 3-Clause license; my copy is released under the MIT license.)
+
 
 ## Part 1: Initial setup
 
@@ -40,6 +42,16 @@ Here's what things looked like at this point:
 ![](/Screenshots/Initial_Setup.png)
 
 
+## Part 2: Basic player movement
+
+To get the player to move, I translated some of the GDScript code found in the [Moving the player with code](https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html) section of YF3DG to C++. (The [player.cpp code within YF2DGC++](https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/player.cpp)--which is [mostly J-Dax's own code](https://github.com/j-dax/gd-cpp/blob/main/src/entity/player.cpp)--proved helpful here.) I skipped the jump-related code and simply worked on getting the player to move left, right, forward, back, and diagonally using the arrow keys. (I was also able to get the player to rotate in the direction of its movement.)
+
+This process also involved adding some movement commands to my project's input map as instructed by YF3DG.
+
+## To do:
+
+1. Get the player to fire projectiles. (There's a Godot tutorial that can help with this.)
+2. See why the player's `movement_speed` attribute isn't appearing within your project editor. Compare your code within `bind_methods` to that found within the GDExtension template to see if the issue lies there.
 
 
 ### An aside: Finding C++ code equivalents to GDScript code
