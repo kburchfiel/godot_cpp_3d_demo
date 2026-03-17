@@ -13,6 +13,7 @@
 // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/player.cpp
 #include <godot_cpp/variant/utility_functions.hpp>
 
+
 using namespace godot;
 
 // The following bind_methods code is based on similar code found 

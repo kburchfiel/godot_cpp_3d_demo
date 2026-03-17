@@ -48,10 +48,23 @@ To get the player to move, I translated some of the GDScript code found in the [
 
 This process also involved adding some movement commands to my project's input map as instructed by YF3DG.
 
+(Note: At one point, the player's `movement_speed` attribute wasn't appearing within my project editor. However, when I later reopened the editor, the attribute then appeared.)
+
+
+## Part 3: Setting up projectiles
+
+Since Godot's [Third Person Shooter](https://github.com/godotengine/tps-demo) demo uses the CharacterBody3D class for its bullets, I decided to do the same. (Since this is also the class on which my Mnchar (player) class is based, I copied and pasted my mnchar.h and mnchar.cpp code as a basis for my projectile code.)
+
+I added lines of code for my new Projectile class (e.g. `#include "projectile.h"` and `GDREGISTER_CLASS(Projectile);` to register_types.cpp.
+
 ## To do:
 
-1. Get the player to fire projectiles. (There's a Godot tutorial that can help with this.)
-2. See why the player's `movement_speed` attribute isn't appearing within your project editor. Compare your code within `bind_methods` to that found within the GDExtension template to see if the issue lies there.
+1. Get the player to fire projectiles. (See links within projectile.cpp that can help with this. As part of this process, debug and revise your code within projectile.cpp as needed; just because it runs doesn't mean it's accurate! Reach out on Discord or the Godot forums for help if necessary--or even check your GDNative 3D game's code for hints.)
+
+
+
+
+
 
 
 ### An aside: Finding C++ code equivalents to GDScript code

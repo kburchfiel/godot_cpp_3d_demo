@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://ckhuieb6lfi2"]
+
+[node name="Node" type="Node" unique_id=36539033]
+
+[node name="Projectile" type="Projectile" parent="." unique_id=1970069747]
