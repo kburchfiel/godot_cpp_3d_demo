@@ -44,6 +44,9 @@ double Projectile::get_projectile_speed() const { return projectile_speed; }
 // https://kidscancode.org/godot_recipes/3.x/3d/3d_shooting/
 // for more details.
 
+// This C++ projectile code (though it's for a 2D game) could also help:
+// https://github.com/vorlac/godot-roguelite/blob/main/src/entity/projectile/projectile.cpp
+
 void Projectile::start(Transform3D transform) {
   // shoot_origin and shoot_dir derive from 
   // the player.gd code in the above link .
