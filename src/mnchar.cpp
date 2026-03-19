@@ -79,6 +79,13 @@ Transform3D projectile_transform = Mnchar::get_transform();
 projectile -> start(projectile_transform);
 // Based on: https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.cpp
 
+
+// In order for our bullets to actually appear, we also need to 
+// add them to our parent scene (e.g. main.tscn).
+get_parent()->add_child(projectile);
+// See https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-get-parent
+// and https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-add-child
+
 }
 
 

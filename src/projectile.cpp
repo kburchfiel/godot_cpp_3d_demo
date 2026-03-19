@@ -100,16 +100,12 @@ void Projectile::start(Transform3D transform) {
 // https://docs.godotengine.org/en/stable/tutorials/physics/using_character_body_2d.html and
 // https://docs.godotengine.org/en/stable/tutorials/3d/using_transforms.html#introduction .
 void Projectile::_physics_process(double delta) {
-UtilityFunctions::print("physics process just got called.");  
-UtilityFunctions::print("delta is", delta);  
-UtilityFunctions::print("projectile_velocity is", projectile_velocity);
 
-
-// auto collision = move_and_collide(projectile_velocity * delta);
+auto collision = move_and_collide(projectile_velocity * delta);
+// Based on: https://docs.godotengine.org/en/stable/tutorials/physics/using_character_body_2d.html
 // This section could be expanded using the code in the previous
 // link. (You'd just need to rework it in C++.)
 
-move_and_slide();
 
 
 
