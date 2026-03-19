@@ -12,6 +12,7 @@
 // Adding in utility functions for printing purposes. Based on:
 // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/player.cpp
 #include <godot_cpp/variant/utility_functions.hpp>
+#include "projectile.h"
 
 
 using namespace godot;
@@ -22,6 +23,24 @@ void Mnchar::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_movement_speed"), &Mnchar::get_movement_speed);
 	ClassDB::bind_method(D_METHOD("set_movement_speed", "p_movement_speed"), &Mnchar::set_movement_speed);
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "movement_speed"), "set_movement_speed", "get_movement_speed");
+
+  // Adding in code to retrieve our projectile scene so that the player can fire bullets:
+  // (This code was based on 
+  // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.cpp ).
+    ClassDB::bind_method(D_METHOD("get_projectile_scene"), &Mnchar::get_projectile_scene);
+    ClassDB::bind_method(D_METHOD("set_projectile_scene", "projectile_scene"), &Mnchar::set_projectile_scene);
+    ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "packed_scene", PROPERTY_HINT_RESOURCE_TYPE, "PackedScene"), "set_projectile_scene", "get_projectile_scene");
+}
+
+// The following two functions were also based on
+// https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.cpp .
+Ref<PackedScene> Mnchar::get_projectile_scene() {
+    return projectile_scene;
+}
+
+void Mnchar::set_projectile_scene(Ref<PackedScene> packed_scene) {  
+  projectile_scene = packed_scene;
+
 }
 
 Mnchar::Mnchar() {
@@ -43,10 +62,31 @@ void Mnchar::set_movement_speed(const double p_movement_speed) {
   movement_speed = p_movement_speed;
 }
 
+void Mnchar::shoot_projectile()
+
+{
+  UtilityFunctions::print("shoot_projectile() called within mnchar.cpp.");
+  // Retrieving our projectile:
+auto projectile = reinterpret_cast<Projectile*>(projectile_scene->instantiate());
+// Based on: // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.cpp
+
+// Initializing the projectile's transform as that 
+// of the main character:
+Transform3D projectile_transform = Mnchar::get_transform();
+// Based on: https://docs.godotengine.org/en/stable/tutorials/3d/using_transforms.html#obtaining-information
+// and 
+
+projectile -> start(projectile_transform);
+// Based on: https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.cpp
+
+}
+
+
+
 double Mnchar::get_movement_speed() const { return movement_speed; }
 
 void Mnchar::_physics_process(double delta) {
-  time_passed += delta;
+  //time_passed += delta;
 
   Vector3 direction = Vector3(0, 0, 0);
   // Based on
@@ -73,6 +113,12 @@ void Mnchar::_physics_process(double delta) {
     direction.z -= 1;
   }
 
+  if (input->is_action_pressed("fire")) {
+    shoot_projectile();
+  }
+
+
+
   // UtilityFunctions::print("direction's x and z values are now", direction.x, direction.z);
 
   if (direction != Vector3(0, 0, 0)) {
@@ -92,7 +138,8 @@ void Mnchar::_physics_process(double delta) {
   target_velocity.x = direction.x * movement_speed;
   target_velocity.z = direction.z * movement_speed;
 
-  UtilityFunctions::print("target_velocity's x and z values are now", target_velocity.x, target_velocity.z);
+  // UtilityFunctions::print("target_velocity's x and z values 
+  // are now", target_velocity.x, target_velocity.z);
 
   // set_velocity() was actually recommended by my compiler!
   // (I had tried just 'velocity', but I'm starting to see that

@@ -1,5 +1,21 @@
 [gd_scene format=3 uid="uid://ckhuieb6lfi2"]
 
-[node name="Node" type="Node" unique_id=36539033]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_akgne"]
+albedo_color = Color(0, 1, 0, 1)
 
-[node name="Projectile" type="Projectile" parent="." unique_id=1970069747]
+[sub_resource type="BoxMesh" id="BoxMesh_a85iw"]
+material = SubResource("StandardMaterial3D_akgne")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qxf0c"]
+
+[node name="Projectile" type="Projectile" unique_id=1314642007]
+
+[node name="Pivot" type="Node3D" parent="." unique_id=846548396]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pivot" unique_id=1497308316]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("BoxMesh_a85iw")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=873638977]
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("BoxShape3D_qxf0c")

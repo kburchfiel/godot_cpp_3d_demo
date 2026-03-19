@@ -31,7 +31,7 @@ double Projectile::get_projectile_speed() const { return projectile_speed; }
 
 // The following function is based mostly on:
 // https://docs.godotengine.org/en/stable/tutorials/physics/using_character_body_2d.html ,
-// https://docs.godotengine.org/en/stable/tutorials/3d/using_transforms.html#introduction ,
+// https://docs.godotengine.org/en/stable/tutorials/3d/using_transforms.html#obtaining-information,
 // and:
 // https://kidscancode.org/godot_recipes/3.x/3d/3d_shooting/
 
@@ -48,6 +48,7 @@ double Projectile::get_projectile_speed() const { return projectile_speed; }
 // https://github.com/vorlac/godot-roguelite/blob/main/src/entity/projectile/projectile.cpp
 
 void Projectile::start(Transform3D transform) {
+
   // shoot_origin and shoot_dir derive from 
   // the player.gd code in the above link .
   UtilityFunctions::print("start() just got called for a projectile.");
@@ -57,11 +58,31 @@ void Projectile::start(Transform3D transform) {
   // set_transform derives from 
   // godot-cpp/gen/src/classes/node3d.cpp (which I may have come
   // across while doing a content search for 'transform').
-  Projectile::set_transform(transform);
+  Projectile::set_transform(transform.translated(Vector3(0, 0, 3)));
+
+   // The above line also creates some distance in between the projectile and the firer. This prevents the firer from
+    // getting hit by its own bullet immediately after firing!
+    // For translated(), see:
+    // https://docs.godotengine.org/en/stable/classes/class_transform3d.html#class-transform3d-method-translated
+
   
+  UtilityFunctions::print("transform is now: ", transform);
+
+
+  auto projectile_basis_z = Projectile::get_transform().get_basis()[2];
+  // There's not a 'z' attribute of a Basis class, but I think
+  // the third vector (accessible via [2]) is equivalent to it.
+  // see godot-cpp/include/godot_cpp/variant/basis.hpp .
+  // This line was also based in part on
+  // https://docs.godotengine.org/en/stable/tutorials/3d/using_transforms.html#obtaining-information .
+
+  UtilityFunctions::print("projectile_basis_z is now:", projectile_basis_z);
+
   // The following line is based on 
-  // https://docs.godotengine.org/en/stable/tutorials/3d/using_transforms.html#introduction
-  projectile_velocity = -1 * (Projectile::get_basis().get_column(2)) * projectile_velocity;
+  // https://docs.godotengine.org/en/stable/tutorials/3d/using_transforms.html#obtaining-information .
+  projectile_velocity = -1 * projectile_basis_z * projectile_speed;
+
+  UtilityFunctions::print("projectile_velocity is now: ", projectile_velocity);
 
     // I had originally attempted to access the 'z' property
     // of the Basis (as shown in
@@ -79,10 +100,17 @@ void Projectile::start(Transform3D transform) {
 // https://docs.godotengine.org/en/stable/tutorials/physics/using_character_body_2d.html and
 // https://docs.godotengine.org/en/stable/tutorials/3d/using_transforms.html#introduction .
 void Projectile::_physics_process(double delta) {
+UtilityFunctions::print("physics process just got called.");  
+UtilityFunctions::print("delta is", delta);  
+UtilityFunctions::print("projectile_velocity is", projectile_velocity);
 
-auto collision = move_and_collide(projectile_velocity * delta);
+
+// auto collision = move_and_collide(projectile_velocity * delta);
 // This section could be expanded using the code in the previous
 // link. (You'd just need to rework it in C++.)
+
+move_and_slide();
+
 
 
 }
