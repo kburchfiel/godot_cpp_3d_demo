@@ -53,23 +53,30 @@ void Projectile::start(Transform3D transform) {
   // the player.gd code in the above link .
   UtilityFunctions::print("start() just got called for a projectile.");
 
-  //set_transform comes from 
-  //Or: set_global_transform?
+
+  UtilityFunctions::print("transform's basis is", 
+    transform.get_basis());
+
   // set_transform derives from 
   // godot-cpp/gen/src/classes/node3d.cpp (which I may have come
   // across while doing a content search for 'transform').
-  Projectile::set_transform(transform.translated(Vector3(0, 0, 3)));
-
-   // The above line also creates some distance in between the projectile and the firer. This prevents the firer from
-    // getting hit by its own bullet immediately after firing!
-    // For translated(), see:
-    // https://docs.godotengine.org/en/stable/classes/class_transform3d.html#class-transform3d-method-translated
-
+  Projectile::set_transform(transform);
   
   UtilityFunctions::print("transform is now: ", transform);
 
 
   auto projectile_basis_z = Projectile::get_transform().get_basis()[2];
+  // I found that, when my player was firing projectiles, the
+  // projectiles went the right direction within the X (left/right) axis
+  // but the opposite direction within the Z (top/bottom) axis. 
+  // Therefore, I added in the following line to invert the Z
+  // direction of the basis's Z axis. I imagine that some other error 
+  // within my code
+  // made this setup necessary, so there should be a way to remove
+  // the need for this change in the future, 
+  // but thankfully it works now!
+  projectile_basis_z.z *= -1;
+
   // There's not a 'z' attribute of a Basis class, but I think
   // the third vector (accessible via [2]) is equivalent to it.
   // see godot-cpp/include/godot_cpp/variant/basis.hpp .

@@ -63,9 +63,17 @@ Next, I added a CollisionShape3D to the Projectile class; chose a BoxShape3D for
 
 I then added in code that made the projectile.tscn scene accessible to my Mnchar class. This way, the Mnchar class could fire bullets by loading the projectile.tscn file; casting this scene to a projectile; and then initializing the projectile's transform with the player's transform. (A crucial part of this process involved reloading the editor after updating my code; going to the Mnchar entry within my main.tscn scene tree; clicking on the new Packed Scene entry within the Inspector menu; and choosing the projectile.tscn file.)
 
-## To do:
+I then updated my projectile.cpp and Mnchar.cpp code to ensure that the bullets would travel in the same direction that the player was facing. This involved a decent amount of trial and error. Some key steps were (1) to initialize the bullet's transform as the Mnchar's Pivot's local transform (as it's that Pivot, rather than the Mnchar itself, that we adjust when moving the player); (2) to perform a local translate of the pivot's transform so that the bullets would start a little ways away from the player; and (3) to adjust the projectile's basis so that the bullets would travel in the intended direction. I also needed to add the bullet as a child of the player's parent scene so that the player's subsequent movement wouldn't affect the bullet's movement.
 
-1. Get the player to fire projectiles. (See links within projectile.cpp that can help with this. As part of this process, debug and revise your code within projectile.cpp as needed; just because it runs doesn't mean it's accurate! Reach out on Discord or the Godot forums for help if necessary--or even check your GDNative 3D game's code for hints.)
+![](Screenshots/firing_projectiles.png)
+
+## Next steps:
+
+1. Only fire a bullet when the space bar goes from 'not pressed' to 'pressed', thus preventing tons of bullets from getting spawned when the space bar is held down
+
+2. Find a way to delete each bullet after a period of time
+
+3. Add in an enemy character and/or other player characters (for a multiplayer battle)
 
 
 

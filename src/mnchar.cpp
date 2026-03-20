@@ -71,10 +71,32 @@ auto projectile = reinterpret_cast<Projectile*>(projectile_scene->instantiate())
 // Based on: // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.cpp
 
 // Initializing the projectile's transform as that 
-// of the main character:
-Transform3D projectile_transform = Mnchar::get_transform();
+// of the main character's Pivot node (as it's this node, not
+// Mnchar itself, whose basis we adjust when moving the player):
+Transform3D projectile_transform = get_node<Node3D>(
+  //"Pivot")->get_global_transform();
+  "Pivot")->get_global_transform();
 // Based on: https://docs.godotengine.org/en/stable/tutorials/3d/using_transforms.html#obtaining-information
-// and 
+// and https://kidscancode.org/godot_recipes/3.x/3d/3d_shooting/
+// Note that, because we're retrieving the Pivot's transform,
+// we need the global transform rather than the local one--as I think
+// the local one just refers to the pivot's orientation relative
+// to Mnchar.
+
+//Transform3D projectile_transform = get_transform();
+
+
+  projectile_transform = projectile_transform.translated_local(Vector3(0, 0, 3));
+
+   // The above line also creates some distance in between the projectile and the firer. This prevents the firer from
+    // getting hit by its own bullet immediately after firing!
+    // For translated_local(), see:
+    // https://docs.godotengine.org/en/stable/classes/class_transform3d.html#class-transform3d-method-translated
+    // We want translated_local() rather than translate() here because
+    // we want to move the projectile in front of the Mnchar's field
+    // of view rather than the game area itself.
+
+
 
 projectile -> start(projectile_transform);
 // Based on: https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.cpp
@@ -140,7 +162,14 @@ void Mnchar::_physics_process(double delta) {
 
     get_node<Node3D>("Pivot")->set_basis(get_node<Node3D>(
 		"Pivot")->get_basis().looking_at(direction));
+
+    //set_basis(get_basis().looking_at(direction));
+
+
   }
+
+  // UtilityFunctions::print("Character's pivot's basis is:",
+  //   get_node<Node3D>("Pivot")->get_basis());
 
   target_velocity.x = direction.x * movement_speed;
   target_velocity.z = direction.z * movement_speed;
