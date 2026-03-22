@@ -26,14 +26,13 @@ class Mnchar : public CharacterBody3D {
 	GDCLASS(Mnchar, CharacterBody3D)
 
 private:
-	//double time_passed;
-	// Based on https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html
+	// See: https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html
 	double movement_speed; // In meters per second
 	// Placed in the private category following the example found at
 	// // Based on https://docs.godotengine.org/en/4.6/tutorials/scripting/cpp/gdextension_cpp_example.html 
 	Ref<PackedScene> projectile_scene; // Based on:
 	// https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.h
-
+	double rotation_speed = 0.15; 
 
 protected:
 	static void _bind_methods();
@@ -46,14 +45,6 @@ public:
 	// https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.h
 	Ref<PackedScene> get_projectile_scene();
 	void set_projectile_scene(Ref<PackedScene>);
-
-
-	Vector3 target_velocity = Vector3(0, 0, 0);
-	// See /godot-cpp/src/variant/vector3.cpp and
-	// godot-cpp/include/godot_cpp/variant/vector3.hpp
-
-	// Based on https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html
-
 
 
 	// The following two lines are based on 

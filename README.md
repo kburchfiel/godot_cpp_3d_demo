@@ -50,6 +50,8 @@ This process also involved adding some movement commands to my project's input m
 
 (Note: At one point, the player's `movement_speed` attribute wasn't appearing within my project editor. However, when I later reopened the editor, the attribute then appeared.)
 
+I later modified this code to allow the player to strafe and rotate, thus freeing up many more movement options.
+
 
 ## Part 3: Setting up projectiles
 
