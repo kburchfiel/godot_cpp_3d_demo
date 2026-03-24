@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://cqow47bch5ocs"]
 
-[ext_resource type="PackedScene" uid="uid://ckhuieb6lfi2" path="res://projectile.tscn" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://c6vortaiiu2nd" path="res://art/player_model.glb" id="1_ig7tw"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
@@ -12,7 +11,6 @@ size = Vector3(60, 2, 60)
 [node name="Main" type="Node" unique_id=1929793096]
 
 [node name="Mnchar" type="Mnchar" parent="." unique_id=954470515]
-packed_scene = ExtResource("1_0xm2m")
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.15699959, 1, 12)
 
 [node name="Pivot" type="Node3D" parent="Mnchar" unique_id=1340568476]

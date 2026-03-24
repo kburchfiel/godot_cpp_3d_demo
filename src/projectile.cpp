@@ -83,13 +83,13 @@ void Projectile::start(Transform3D transform) {
   // This line was also based in part on
   // https://docs.godotengine.org/en/stable/tutorials/3d/using_transforms.html#obtaining-information .
 
-  UtilityFunctions::print("projectile_basis_z is now:", projectile_basis_z);
+  //UtilityFunctions::print("projectile_basis_z is now:", projectile_basis_z);
 
   // The following line is based on 
   // https://docs.godotengine.org/en/stable/tutorials/3d/using_transforms.html#obtaining-information .
   projectile_velocity = -1 * projectile_basis_z * projectile_speed;
 
-  UtilityFunctions::print("projectile_velocity is now: ", projectile_velocity);
+  //UtilityFunctions::print("projectile_velocity is now: ", projectile_velocity);
 
     // I had originally attempted to access the 'z' property
     // of the Basis (as shown in

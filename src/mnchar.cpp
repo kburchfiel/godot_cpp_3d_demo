@@ -9,6 +9,7 @@
 #include <godot_cpp/classes/input.hpp>
 #include <godot_cpp/classes/input_map.hpp>
 #include <godot_cpp/variant/basis.hpp>
+#include <cmath>
 // Adding in utility functions for printing purposes. Based on:
 // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/player.cpp
 #include "projectile.h"
@@ -74,7 +75,7 @@ void Mnchar::set_movement_speed(const double p_movement_speed) {
 void Mnchar::shoot_projectile()
 
 {
-  UtilityFunctions::print("shoot_projectile() called within mnchar.cpp.");
+  //UtilityFunctions::print("shoot_projectile() called within mnchar.cpp.");
   // Retrieving our projectile:
   auto projectile =
       reinterpret_cast<Projectile *>(projectile_scene->instantiate());
@@ -191,13 +192,42 @@ get_node<Node3D>("Pivot")->rotate_object_local(Vector3(0, 1, 0),
 	// See /godot-cpp/src/variant/vector3.cpp and
 	// godot-cpp/include/godot_cpp/variant/vector3.hpp
 	// Based on https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html
+  // and and https://github.com/godotrecipes/characterbody3d_examples/blob/master/mini_tank.gd
   Vector3 target_velocity = Vector3(0, 0, 0);
 
-  target_velocity +=
-      -1 * player_transform_basis_z * z_direction * movement_speed;
+
+  // I would like Mnchar to be able to move forward,
+  // back, left, or right relative to its current position-but only
+  // *one* of those directions (e.g. not diagonally). Therefore,
+  // I added in code below that finds the absolute value of 
+  // the x and z directions, then moves the player along the axis
+  // with the greatest absolute value. This isn't strictly necessary,
+  // but I find it to make Mnchar's movement somewhat more
+  // intuitive.
+  // Note that I'm using the standard library's abs() function
+  // rather than Godot's, as the latter appeared to truncate
+  // values down to the nearest int.
+  float abs_z_direction = std::abs(z_direction);
+  float abs_x_direction = std::abs(x_direction);
+
+// UtilityFunctions::print("abs(z_direction): ", abs_z_direction, "abs(x_direction): ", abs_x_direction);
+
+
+// We could also use target_velocity = rather than target_velocity +=;
+// however, the existing code will work better in case we ultimately
+// want to allow the player to move along the x and z axes
+// at the same time.
+  if (abs_z_direction >= abs_x_direction)
+  {target_velocity +=
+      -1 * player_transform_basis_z * z_direction * movement_speed;}
+  else {
   target_velocity +=
       -1 * player_transform_basis_x * x_direction * movement_speed;
-  UtilityFunctions::print("player's target velocity:", target_velocity);
+  }
+  //UtilityFunctions::print("player's target velocity:", target_velocity);
+	// Based on https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html
+  // and and https://github.com/godotrecipes/characterbody3d_examples/blob/master/mini_tank.gd
+
 
   set_velocity(target_velocity);
 

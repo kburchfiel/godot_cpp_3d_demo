@@ -71,11 +71,25 @@ I then updated my projectile.cpp and Mnchar.cpp code to ensure that the bullets 
 
 ## Next steps:
 
-1. Only fire a bullet when the space bar goes from 'not pressed' to 'pressed', thus preventing tons of bullets from getting spawned when the space bar is held down
+1. Find a way to set up multiplayer such that (1) all players can use the same buttons (e.g. left and right joysticks) to move, and (2) you can easily support anywhere from 2 to 8 players. (As a prerequisite, you'll also want to create a Main class and script that can govern the addition of an arbitrary number of players; check the C++ version of YF2DG for a template to get you started.) Resources that may help you get there include:
 
-2. Find a way to delete each bullet after a period of time
+https://www.reddit.com/r/godot/comments/13ikz4u/best_way_to_handle_controller_input_for_local/
 
-3. Add in an enemy character and/or other player characters (for a multiplayer battle)
+https://github.com/remram44/godot-multiplayer-example
+
+https://www.gdquest.com/library/split_screen_coop/
+
+https://godotassetlibrary.com/asset/QdddqG/multiplayer-input
+
+https://kidscancode.org/godot_recipes/3.x/2d/splitscreen_demo/index.html
+
+**Note:** The Input Map screen within the Project Settings guide lets you specify for which device (Device 0, Device 1 . . . Device 7) a particular action should be applied. This should help you map different players' actions to different controllers.
+
+1. Find a way to delete each bullet after a period of time
+
+2. Add in an enemy character and/or other player characters (for a multiplayer battle or co-op setup)
+
+
 
 
 
