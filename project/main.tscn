@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cqow47bch5ocs"]
 
-[ext_resource type="PackedScene" uid="uid://c6vortaiiu2nd" path="res://art/player_model.glb" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://dc3nje2ppsfhy" path="res://mnchar.tscn" id="1_ig7tw"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(60, 2, 60)
@@ -9,13 +9,6 @@ size = Vector3(60, 2, 60)
 size = Vector3(60, 2, 60)
 
 [node name="Main" type="Node" unique_id=1929793096]
-
-[node name="Mnchar" type="Mnchar" parent="." unique_id=954470515]
-transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.15699959, 1, 12)
-
-[node name="Pivot" type="Node3D" parent="Mnchar" unique_id=1340568476]
-
-[node name="Character" parent="Mnchar/Pivot" unique_id=867681550 instance=ExtResource("1_ig7tw")]
 
 [node name="Ground" type="StaticBody3D" parent="." unique_id=1722754095]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
@@ -34,3 +27,9 @@ shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot" unique_id=298973491]
 transform = Transform3D(1, 0, 0, 0, 0.49999994, 0.86602545, 0, -0.86602545, 0.49999994, 0, 26, 28)
+
+[node name="Mnchar_0" parent="." unique_id=1052373598 instance=ExtResource("1_ig7tw")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -20, 1, 25)
+
+[node name="Mnchar_1" parent="." unique_id=1670805877 instance=ExtResource("1_ig7tw")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 20, 1, 25)

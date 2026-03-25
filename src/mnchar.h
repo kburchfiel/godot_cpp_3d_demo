@@ -34,6 +34,15 @@ private:
 	// https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.h
 	double rotation_speed = 0.15; 
 
+	//int player_id; // Added to (hopefully) assist with multiplayer
+	// code. (My idea is to assign different IDs to different Mnchar
+	// instances, either in the editor or (eventually) via code),
+	// then have different controllers work for different players
+	// depending on their ID. (For example, if the player's ID is
+	// 0, the code would then check for move_right_0, move_left_0,
+	// etc; if it's 1, it would instead check for move_right_1,
+	// move_left_1, and so on.)
+
 protected:
 	static void _bind_methods();
 

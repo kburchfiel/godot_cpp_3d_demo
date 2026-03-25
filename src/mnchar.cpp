@@ -9,6 +9,7 @@
 #include <godot_cpp/classes/input.hpp>
 #include <godot_cpp/classes/input_map.hpp>
 #include <godot_cpp/variant/basis.hpp>
+#include <godot_cpp/classes/input_event.hpp>
 #include <cmath>
 // Adding in utility functions for printing purposes. Based on:
 // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/player.cpp
@@ -144,6 +145,8 @@ void Mnchar::_physics_process(double delta) {
   // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/player.cpp
   // and
   // https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html
+
+
   auto input = Input::get_singleton();
 
   // Specifying x and z directions: (These will range from -1 to 1
@@ -168,6 +171,7 @@ get_node<Node3D>("Pivot")->rotate_object_local(Vector3(0, 1, 0),
   // See:
   // godot-cpp/gen/include/godot_cpp/classes/input.hpp
   if (input->is_action_just_pressed("fire")) {
+
     shoot_projectile();
   }
 
