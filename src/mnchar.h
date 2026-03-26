@@ -34,7 +34,7 @@ private:
 	// https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.h
 	double rotation_speed = 0.15; 
 
-	//int player_id; // Added to (hopefully) assist with multiplayer
+	String mnchar_id = "0"; // Added to (hopefully) assist with multiplayer
 	// code. (My idea is to assign different IDs to different Mnchar
 	// instances, either in the editor or (eventually) via code),
 	// then have different controllers work for different players
@@ -60,7 +60,9 @@ public:
 	// https://docs.godotengine.org/en/4.6/tutorials/scripting/cpp/gdextension_cpp_example.html .
 	void set_movement_speed(const double movement_speed);
 	double get_movement_speed() const;
-	
+
+	void set_mnchar_id(const String mnchar_id);
+	String get_mnchar_id() const;
 
 	void _physics_process(double delta) override;
     // Using _physics_process rather than

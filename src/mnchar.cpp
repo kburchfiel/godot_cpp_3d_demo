@@ -30,6 +30,13 @@ void Mnchar::_bind_methods() {
   ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "movement_speed"),
                "set_movement_speed", "get_movement_speed");
 
+    ClassDB::bind_method(D_METHOD("get_mnchar_id"),
+                       &Mnchar::get_mnchar_id);
+  ClassDB::bind_method(D_METHOD("set_mnchar_id", "p_mnchar_id"),
+                       &Mnchar::set_mnchar_id);
+  ADD_PROPERTY(PropertyInfo(Variant::STRING, "mnchar_id"),
+               "set_mnchar_id", "get_mnchar_id");
+
   // Adding in code to retrieve our projectile scene so that the player can fire
   // bullets: (This code was based on
   // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.cpp
@@ -72,6 +79,20 @@ Mnchar::~Mnchar() {
 void Mnchar::set_movement_speed(const double p_movement_speed) {
   movement_speed = p_movement_speed;
 }
+
+double Mnchar::get_movement_speed() const {return movement_speed;}
+
+
+void Mnchar::set_mnchar_id(const String p_mnchar_id) {
+  mnchar_id = p_mnchar_id;
+}
+
+String Mnchar::get_mnchar_id() const {return mnchar_id;}
+
+
+
+
+
 
 void Mnchar::shoot_projectile()
 
@@ -124,14 +145,14 @@ void Mnchar::shoot_projectile()
   // https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-add-child
 }
 
-double Mnchar::get_movement_speed() const { return movement_speed; }
-
 void Mnchar::_physics_process(double delta) {
   // The following code allows the player to rotate, strafe,
   // move forward and back, and shoot projectiles.
 
   // Initializing x (left/right) and z (forward/back) components
   // of the player's velocity:
+
+  //UtilityFunctions::print("MncharID is", mnchar_id);
 
   float x_direction = 0;
   float z_direction = 0;
@@ -153,8 +174,12 @@ void Mnchar::_physics_process(double delta) {
   // depending on how strong the player presses a given joystick.)
   // Based on: https://docs.godotengine.org/en/stable/tutorials/2d/2d_movement.html
   // and https://github.com/godotrecipes/characterbody3d_examples/blob/master/mini_tank.gd
-  x_direction = input->get_axis("move_left", "move_right");
-  z_direction = input->get_axis("move_forward", "move_back");
+
+
+  x_direction = input->get_axis("move_left_"+mnchar_id, 
+    "move_right_"+mnchar_id);
+  z_direction = input->get_axis("move_forward_"+mnchar_id,
+   "move_back_"+mnchar_id);
 
   // Rotating the player:
   // See: godot-cpp/gen/src/classes/node3d.cpp ,
@@ -162,7 +187,8 @@ void Mnchar::_physics_process(double delta) {
   // and https://docs.godotengine.org/en/stable/tutorials/2d/2d_movement.html
 
 get_node<Node3D>("Pivot")->rotate_object_local(Vector3(0, 1, 0),
-   rotation_speed * input->get_axis("rotate_right", "rotate_left"));
+   rotation_speed * input->get_axis("rotate_right_"+mnchar_id, 
+  "rotate_left_"+mnchar_id));
 
   // I chose is_action_just_pressed here so that a projectile would
   // only be fired when the button is first registered as pressed.
@@ -170,7 +196,7 @@ get_node<Node3D>("Pivot")->rotate_object_local(Vector3(0, 1, 0),
   // was held down.)
   // See:
   // godot-cpp/gen/include/godot_cpp/classes/input.hpp
-  if (input->is_action_just_pressed("fire")) {
+  if (input->is_action_just_pressed("fire_"+mnchar_id)) {
 
     shoot_projectile();
   }

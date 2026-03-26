@@ -6,9 +6,13 @@ By Ken Burchfiel
 
 Released under the MIT License
 
+*Note: I chose not to use generative AI tools to write this project's code or this Readme.*
+
 This project is an opportunity for me to *learn* how to use GDExtension, together with Godot 4.6, to create a game in C++. For my own reference, I'm planning to note some of the steps I took here; additional comments will be found within the project's src folder (which will contain my game's code).
 
-### References and resources I used to create this project:
+### References and resources I used to create this project: 
+
+(This list is incomplete; additional resources are mentioned within the code.)
 
 * [Version 4.6 of the Getting Started GDExtension documentation page (GDEGS)](https://docs.godotengine.org/en/4.6/tutorials/scripting/cpp/gdextension_cpp_example.html)
 
@@ -69,33 +73,66 @@ I then updated my projectile.cpp and Mnchar.cpp code to ensure that the bullets 
 
 ![](Screenshots/firing_projectiles.png)
 
-## Next steps:
+## Part 4: Adding multiplayer support
 
-1. Find a way to set up multiplayer such that (1) all players can use the same buttons (e.g. left and right joysticks) to move, and (2) you can easily support anywhere from 2 to 8 players. (As a prerequisite, you'll also want to create a Main class and script that can govern the addition of an arbitrary number of players; check the C++ version of YF2DG for a template to get you started.) Resources that may help you get there include:
+Now that I had a simple, but functional, player class (Mnchar), I wanted to make it possible for multiple players to control multiple Mnchar objects independently. 
 
-https://www.reddit.com/r/godot/comments/13ikz4u/best_way_to_handle_controller_input_for_local/
+To prepare for multiplayer gameplay, I moved my Mnchar class to its own scene, then added two copies of this scene to main.tscn. At first, the game crashed (with a Signal 11 error code) when I attempted to do so; I eventually realized that this was because the Mnchar code references a Pivot class, and this class needed to be present before I could successfully add my Mnchar class. Thus, I  (1) initialized my Mnchar scene (mnchar.tscn) as a CharacterBody3D node; (2) added a Node3D as a child of this node; (3) renamed that Node3D to 'Pivot'; and (4) changed the CharacterBody3D node to a Mnchar node. 
 
-https://github.com/remram44/godot-multiplayer-example
+The easiest option for enabling multiplayer functionality, as shown in some online guides, would be to delegate different parts of the keyboard to different players. However, this wasn't ideal for two main reasons. First, I wanted players to be able to use video game controllers to play the game, and it would be tricky to delegate different parts of the controllers to different actions. (Even if I did so, mischievous players could then just hit the buttons corresponding to the other player's movements anyway!)
 
-https://www.gdquest.com/library/split_screen_coop/
+But more importantly, I wanted to allow up to 8 players to compete at the same time--which more or less necessitated that I allow the same buttons on different controllers to map to different players' inputs.
 
-https://godotassetlibrary.com/asset/QdddqG/multiplayer-input
+I implemented a multiplayer setup as follows. First, I updated my project's input map (accessible via Project --> Project Settings --> Input Map) so that it would have multiple copies of each input. (I started with two copies for a 2-player game, but I can later expand this to eight copies.) I added a numerical suffix to the names of these inputs (e.g. "move_right_0", "move_right_1") in order to distinguish them from one another.
 
-https://kidscancode.org/godot_recipes/3.x/2d/splitscreen_demo/index.html
+Next, I used those same numbers to specify which device would be linked with that input. (All movements ending in "_0" would be linked to Device 0; all movements ending in "_1" will be linked to Device 1; and so on. There are eight device numbers (ranging from 0 to 7) to choose from.
 
-**Note:** The Input Map screen within the Project Settings guide lets you specify for which device (Device 0, Device 1 . . . Device 7) a particular action should be applied. This should help you map different players' actions to different controllers.
+Here are all of my "_1" inputs: (There's a similar set of "_0" inputs, though those are also mapped to keyboard inputs for convenience's sake.)
 
-1. Find a way to delete each bullet after a period of time
-
-2. Add in an enemy character and/or other player characters (for a multiplayer battle or co-op setup)
+![](Screenshots/input_map_section.png)
 
 
+The final step was to update my code such that each player could be linked to one, and only one, set of these inputs. I first added a new String variable (`mnchar_id`) that could store a unique ID for each Mnchar. I made this variable accessible within the editor using my existing `movement_speed` variable as a reference. I then added this ID as a suffix to my original input commands. Here's an example from `Mnchar::_physics_process()` within mnchar.cpp:
+
+```
+  x_direction = input->get_axis("move_left_"+mnchar_id, 
+    "move_right_"+mnchar_id);
+```
+
+If the character's mnchar_id is 0, the code will use `move_left_0` and `move_right_0` as the basis for its input. Meanwhile, if `mnchar_id` is 1, the code will listen for `move_left_1` and `move_right_1` for its inputs. Since the `_0` movements and `_1` movements are mapped to different devices, this approach allows different devices to get mapped to different players. 
+
+A crucial step here, of course, is to make sure that each Mnchar has a different mnchar_id. I accomplished this within the editor, but I'm quite sure this can be achieved via code as well (which would be helpful if I used C++ code, rather than the editor, to add Mnchar objects to the game area.)
+
+The following resources helped me figure out this approach:
+
+    https://www.reddit.com/r/godot/comments/13ikz4u/best_way_to_handle_controller_input_for_local/
+
+    https://github.com/remram44/godot-multiplayer-example
+
+    https://www.gdquest.com/library/split_screen_coop/
+
+    https://godotassetlibrary.com/asset/QdddqG/multiplayer-input
+
+    https://kidscancode.org/godot_recipes/3.x/2d/splitscreen_demo/index.html
 
 
 
 
+## Next steps (an incomplete list!)
 
+1. Remove players from the game scene upon collision with a projectile.
 
+2. Consider assigning different colors (red, green, etc.) to different players--and consider making their projectile colors match their character colors in order to make them easier to distinguish.
+
+3. Delete projectiles after a certain amount of time has passed.
+
+4. Figure out a way to allow players to specify the number of people who will be playing, then update your game area accordingly. One option would be to create these different areas as different scenes, then choose which scene to display via a menu; however, it would also be nice to be able to perform this via code (e.g. via a main.cpp script--which would be helpful for other functions too). You'd just need to assign each player's ID within the code, but this could probably be accomplished via your `set_mnchar_id()` function.
+
+## Troubleshooting notes
+
+* I sometimes found, particularly after compiling my C++ code, that the Projectile.tscn scene would sometimes disappear from my Packed Scene entry within my Mnchar's properties. (An "empty" message would appear in its place.) This would then cause the game to crash if I attempted to fire a projectile, as Godot wouldn't know what scene to use as the basis for projectiles. I'm not sure whether this is due to a glitch within Godot 4.6 or some issue with my own setup, but either way, the fix was thankfully quite simple: I simply had to reload the projectile.tscn scene, a process that takes only a few clicks.
+
+* As mentioned within the Multiplayer section: If you're trying to add a GDExtension class to a scene, make sure that the child nodes referenced by your C++ code (e.g. the Pivot node in the case of the Mnchar class) are present within the editor. See the Multiplayer section for more details.
 
 ### An aside: Finding C++ code equivalents to GDScript code
 
