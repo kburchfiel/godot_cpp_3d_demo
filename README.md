@@ -132,7 +132,9 @@ In addition, I updated my projectile code to remove projectiles from the screen 
 
 ## Part 6: Creating separate colors for each Mnchar and its corresponding projectiles
 
-In order to make the characters easier to distinguish (and make their projectiles correspond to their colors), I created a second copy of my mnchar.tscn and projectile.tscn scenes, then assigned _0 and _1 suffixes to their filenames. I then changed the albedos of the Mnchar and Projectile objects in mnchar_0.tscn and projectile_0.tscn to red; next, I made the Mnchar and Projectile objects in mnchar_1.tscn and projectile_1.tscn green. (I also set the ID of the Mnchar in mnchar_1.tscn to 1; the ID of the Mnchar in mnchar_0.tscn was kept as 0. That way, each player could be controlled independently as discussed earlier.
+I wanted to assign different colors to different main-character objects in order to make them easier to distinguish. This first involved recreating the mesh used for my Mnchar object in Godot; I had created it in Blender a while back, but I figured that reconstructing it in Godot would allow for more flexibility. (Since each Mnchar's shape is simply a 2x2x2 cube with a 0.25x0.25x0.25 'turret' attached to the front, this didn't take long to accomplish at all.)
+
+Next, I created a second copy of my mnchar.tscn and projectile.tscn scenes, then assigned _0 and _1 suffixes to their filenames. I made the albedos of the Mnchar and Projectile objects in mnchar_0.tscn and projectile_0.tscn to red; next, I made the Mnchar and Projectile objects in mnchar_1.tscn and projectile_1.tscn green. (I also set the ID of the Mnchar in mnchar_1.tscn to 1; the ID of the Mnchar in mnchar_0.tscn was kept as 0. That way, each player could be controlled independently as discussed earlier.
 
 (I did try to change albedos (colors) using C++, but I wasn't able to get my code working. See https://discordapp.com/channels/212250894228652034/342047011778068481/1487531539867766835)
 
