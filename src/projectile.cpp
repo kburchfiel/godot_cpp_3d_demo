@@ -113,11 +113,13 @@ auto collision = move_and_collide(projectile_velocity * delta);
 // This section could be expanded using the code in the previous
 // link. (You'd just need to rework it in C++.)
 
-UtilityFunctions::print("active_time is", active_time);
+//UtilityFunctions::print("active_time is", active_time);
 
 // Remove the projectile from the game if it has been active
-// for at least one second
-if (active_time >= 1)
+// for at least two seconds. (This should give it plenty of time
+// to travel across the game area, even diagonally from one corner to
+// the opposite corner.)
+if (active_time >= 2)
 {queue_free();}
 
 active_time += delta;

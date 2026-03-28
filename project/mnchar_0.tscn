@@ -1,19 +1,32 @@
 [gd_scene format=3 uid="uid://dc3nje2ppsfhy"]
 
-[ext_resource type="PackedScene" uid="uid://c6vortaiiu2nd" path="res://art/player_model.glb" id="1_0j8lf"]
-[ext_resource type="PackedScene" uid="uid://ckhuieb6lfi2" path="res://projectile.tscn" id="1_ygbm5"]
+[ext_resource type="PackedScene" uid="uid://ckhuieb6lfi2" path="res://projectile_0.tscn" id="1_yx51v"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1ngy0"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0j8lf"]
+material = SubResource("StandardMaterial3D_1ngy0")
+
+[sub_resource type="BoxMesh" id="BoxMesh_1ngy0"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0j8lf"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ygbm5"]
 
 [node name="Mnchar" type="Mnchar" unique_id=1052373598]
-packed_scene = ExtResource("1_ygbm5")
+packed_scene = ExtResource("1_yx51v")
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1, 0)
 
 [node name="Pivot" type="Node3D" parent="." unique_id=1861752919]
 
-[node name="Character" parent="Pivot" unique_id=867681550 instance=ExtResource("1_0j8lf")]
+[node name="MncharBody" type="MeshInstance3D" parent="Pivot" unique_id=1386873105]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+mesh = SubResource("BoxMesh_0j8lf")
+
+[node name="MncharTurret" type="MeshInstance3D" parent="Pivot" unique_id=471075221]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 1.25)
+mesh = SubResource("BoxMesh_1ngy0")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=32554395]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)

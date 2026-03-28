@@ -130,9 +130,15 @@ This step involved adding a `Mnchar::_on_projectile_detector_body_entered()` fun
 
 In addition, I updated my projectile code to remove projectiles from the screen after they have been active for at least one second.
 
+## Part 6: Creating separate colors for each Mnchar and its corresponding projectiles
+
+In order to make the characters easier to distinguish (and make their projectiles correspond to their colors), I created a second copy of my mnchar.tscn and projectile.tscn scenes, then assigned _0 and _1 suffixes to their filenames. I then changed the albedos of the Mnchar and Projectile objects in mnchar_0.tscn and projectile_0.tscn to red; next, I made the Mnchar and Projectile objects in mnchar_1.tscn and projectile_1.tscn green. (I also set the ID of the Mnchar in mnchar_1.tscn to 1; the ID of the Mnchar in mnchar_0.tscn was kept as 0. That way, each player could be controlled independently as discussed earlier.
+
+(I did try to change albedos (colors) using C++, but I wasn't able to get my code working. See https://discordapp.com/channels/212250894228652034/342047011778068481/1487531539867766835)
+
 ## Next steps (an incomplete list!)
 
-1. Consider assigning different colors (red, green, etc.) to different players--and consider making their projectile colors match their character colors in order to make them easier to distinguish.
+1. Find a way to change albedos within C++ so that you don't have to create multiple copies of each player and projectile class.
 
 1. Figure out a way to allow players to specify the number of people who will be playing, then update your game area accordingly. One option would be to create these different areas as different scenes, then choose which scene to display via a menu; however, it would also be nice to be able to perform this via code (e.g. via a main.cpp script--which would be helpful for other functions too). You'd just need to assign each player's ID within the code, but this could probably be accomplished via your `set_mnchar_id()` function.
 
