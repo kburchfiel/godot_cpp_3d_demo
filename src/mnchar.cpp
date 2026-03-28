@@ -119,12 +119,12 @@ void Mnchar::_ready() {
     // BaseMaterial3D new_base_material = BaseMaterial3D();
     // new_base_material.set_albedo(Color(0.0, 0.9, 0.0, 1.0));
 
-    auto mncharbody_mesh_material = get_node<Node3D>("Pivot")
-                                        ->get_node<MeshInstance3D>("MncharBody")
-                                        ->get_mesh()
-                                        ->surface_get_material(0);
-    auto mncharbody_mesh_material_3d =
-        reinterpret_cast<BaseMaterial3D *>(mncharbody_mesh_material);
+    // auto mncharbody_mesh_material = get_node<Node3D>("Pivot")
+    //                                     ->get_node<MeshInstance3D>("MncharBody")
+    //                                     ->get_mesh()
+    //                                     ->surface_get_material(0);
+    // auto mncharbody_mesh_material_3d =
+    //     reinterpret_cast<BaseMaterial3D *>(mncharbody_mesh_material);
 
     // get_active_material takes an integer argument; I just chose 0
     // as a guess :)
@@ -149,7 +149,7 @@ void Mnchar::_ready() {
 
     // UtilityFunctions::print(mncharbody_material.albedo_color);
 
-    UtilityFunctions::print("Done!");
+    // UtilityFunctions::print("Done!");
   }
 }
 
