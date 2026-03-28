@@ -5,6 +5,8 @@
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0j8lf"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_ygbm5"]
+
 [node name="Mnchar" type="Mnchar" unique_id=1052373598]
 packed_scene = ExtResource("1_ygbm5")
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1, 0)
@@ -16,3 +18,13 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=32554395]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 shape = SubResource("BoxShape3D_0j8lf")
+
+[node name="Projectile_Detector" type="Area3D" parent="." unique_id=370573448]
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Projectile_Detector" unique_id=1607403826]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+shape = SubResource("BoxShape3D_ygbm5")
+
+[connection signal="body_entered" from="Projectile_Detector" to="." method="_on_projectile_detector_body_entered"]

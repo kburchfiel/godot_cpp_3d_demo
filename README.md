@@ -6,7 +6,7 @@ By Ken Burchfiel
 
 Released under the MIT License
 
-*Note: I chose not to use generative AI tools to write this project's code or this Readme.*
+*Note: I chose not to use generative AI tools to write this project's code or this Readme. It was important for me to understand what the code was doing, and I felt that LLMs would get in the way of that.*
 
 This project is an opportunity for me to *learn* how to use GDExtension, together with Godot 4.6, to create a game in C++. For my own reference, I'm planning to note some of the steps I took here; additional comments will be found within the project's src folder (which will contain my game's code).
 
@@ -116,17 +116,25 @@ The following resources helped me figure out this approach:
     https://kidscancode.org/godot_recipes/3.x/2d/splitscreen_demo/index.html
 
 
+## Part 5: Removing players upon collision with a projectile
 
+This step involved adding a `Mnchar::_on_projectile_detector_body_entered()` function within mnchar.cpp and mnchar.h; creating a new Area3D node within the Mnchar.tscn file in the editor and connecting its `on_body_entered` signal to this function (see screenshots below); and updating the collision layers and masks for the Mnchar and Projectile classes. (The [Jumping and squashing monsters](https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/06.jump_and_squash.html) section of Godot's Your First 3D Game tutorial proved very helpful here.)
+
+![](Screenshots/connecting_body_entered_signal.png)
+
+*Connecting the signal*
+
+![](Screenshots/player_signals.png)
+
+*The player's Signals list following this update*
+
+In addition, I updated my projectile code to remove projectiles from the screen after they have been active for at least one second.
 
 ## Next steps (an incomplete list!)
 
-1. Remove players from the game scene upon collision with a projectile.
+1. Consider assigning different colors (red, green, etc.) to different players--and consider making their projectile colors match their character colors in order to make them easier to distinguish.
 
-2. Consider assigning different colors (red, green, etc.) to different players--and consider making their projectile colors match their character colors in order to make them easier to distinguish.
-
-3. Delete projectiles after a certain amount of time has passed.
-
-4. Figure out a way to allow players to specify the number of people who will be playing, then update your game area accordingly. One option would be to create these different areas as different scenes, then choose which scene to display via a menu; however, it would also be nice to be able to perform this via code (e.g. via a main.cpp script--which would be helpful for other functions too). You'd just need to assign each player's ID within the code, but this could probably be accomplished via your `set_mnchar_id()` function.
+1. Figure out a way to allow players to specify the number of people who will be playing, then update your game area accordingly. One option would be to create these different areas as different scenes, then choose which scene to display via a menu; however, it would also be nice to be able to perform this via code (e.g. via a main.cpp script--which would be helpful for other functions too). You'd just need to assign each player's ID within the code, but this could probably be accomplished via your `set_mnchar_id()` function.
 
 ## Troubleshooting notes
 

@@ -48,6 +48,16 @@ void Mnchar::_bind_methods() {
   ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "packed_scene",
                             PROPERTY_HINT_RESOURCE_TYPE, "PackedScene"),
                "set_projectile_scene", "get_projectile_scene");
+
+
+
+    ClassDB::bind_method(D_METHOD("_on_projectile_detector_body_entered", "node"), 
+    &Mnchar::_on_projectile_detector_body_entered);
+
+    // Based on:
+    // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/player.cpp
+
+
 }
 
 // The following two functions were also based on
@@ -144,6 +154,20 @@ void Mnchar::shoot_projectile()
   // and
   // https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-add-child
 }
+
+void Mnchar::_on_projectile_detector_body_entered(Node3D *node) {
+    UtilityFunctions::print("on_body_entered() just got called within mnchar.cpp.");
+    queue_free(); // This function is based on
+    // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/mob.cpp 
+    // and https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-queue-free
+    // We may not actually need the *node argument here, since
+    // we're not making any updates to the node itself.
+    // In order for this function to respond to collisions with
+    // projectiles, but *not* the ground or the player itself,
+    // you'll need to update the layer and mask items within
+    // the editor. See README for more details.
+}
+
 
 void Mnchar::_physics_process(double delta) {
   // The following code allows the player to rotate, strafe,
