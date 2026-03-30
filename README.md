@@ -144,9 +144,9 @@ With help from RamblingStranger on discord (https://discordapp.com/channels/2122
 
 1. Keep only one copy of projectile and Mnchar scenes, then use main.h and main.cpp scripts to add a certain number of these players to your main-game scene. (Make sure to set each of these Mnchar items' IDs accordingly.)
 
-1. Update your projectile.cpp code such that their colors match those of the Mnchar objects firing them.
+2. Update your projectile.cpp code such that their colors match those of the Mnchar objects firing them.
 
-1. Create HUD code that (among other things) allows players to specify how many Mnchar entities to add to the scene.
+3. Create HUD code that (among other things) allows players to specify how many Mnchar entities to add to the scene.
 
 ## Troubleshooting notes
 
