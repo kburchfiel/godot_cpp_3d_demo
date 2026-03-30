@@ -6,16 +6,20 @@
 #include <godot_cpp/core/class_db.hpp>
 // The following two lines come from
 // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/player.cpp
+#include <cmath>
 #include <godot_cpp/classes/input.hpp>
+#include <godot_cpp/classes/input_event.hpp>
 #include <godot_cpp/classes/input_map.hpp>
 #include <godot_cpp/variant/basis.hpp>
-#include <godot_cpp/classes/input_event.hpp>
-#include <cmath>
 // Adding in utility functions for printing purposes. Based on:
 // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/player.cpp
 #include "projectile.h"
+#include <godot_cpp/classes/mesh_instance3d.hpp> // Necessary for us
 #include <godot_cpp/variant/utility_functions.hpp>
-
+// to access a MeshInstance3D within this script
+#include <godot_cpp/classes/base_material3d.hpp>
+#include <godot_cpp/classes/shader_material.hpp>
+#include <godot_cpp/classes/standard_material3d.hpp>
 using namespace godot;
 
 // The following bind_methods code is based on similar code found
@@ -30,12 +34,11 @@ void Mnchar::_bind_methods() {
   ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "movement_speed"),
                "set_movement_speed", "get_movement_speed");
 
-    ClassDB::bind_method(D_METHOD("get_mnchar_id"),
-                       &Mnchar::get_mnchar_id);
+  ClassDB::bind_method(D_METHOD("get_mnchar_id"), &Mnchar::get_mnchar_id);
   ClassDB::bind_method(D_METHOD("set_mnchar_id", "p_mnchar_id"),
                        &Mnchar::set_mnchar_id);
-  ADD_PROPERTY(PropertyInfo(Variant::STRING, "mnchar_id"),
-               "set_mnchar_id", "get_mnchar_id");
+  ADD_PROPERTY(PropertyInfo(Variant::STRING, "mnchar_id"), "set_mnchar_id",
+               "get_mnchar_id");
 
   // Adding in code to retrieve our projectile scene so that the player can fire
   // bullets: (This code was based on
@@ -48,6 +51,12 @@ void Mnchar::_bind_methods() {
   ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "packed_scene",
                             PROPERTY_HINT_RESOURCE_TYPE, "PackedScene"),
                "set_projectile_scene", "get_projectile_scene");
+
+  ClassDB::bind_method(D_METHOD("_on_projectile_detector_body_entered", "node"),
+                       &Mnchar::_on_projectile_detector_body_entered);
+
+  // Based on:
+  // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/player.cpp
 }
 
 // The following two functions were also based on
@@ -62,7 +71,7 @@ void Mnchar::set_projectile_scene(Ref<PackedScene> packed_scene) {
 Mnchar::Mnchar() {
   // Initialize any variables here.
   // time_passed = 0.0; // Based on GDExtension 4.6 demo
-  movement_speed = 14;
+  // movement_speed = 14; // Already set within mnchar.h
   // Based on
   // https://docs.godotengine.org/en/4.6/tutorials/scripting/cpp/gdextension_cpp_example.html
 }
@@ -80,25 +89,75 @@ void Mnchar::set_movement_speed(const double p_movement_speed) {
   movement_speed = p_movement_speed;
 }
 
-double Mnchar::get_movement_speed() const {return movement_speed;}
-
+double Mnchar::get_movement_speed() const { return movement_speed; }
 
 void Mnchar::set_mnchar_id(const String p_mnchar_id) {
   mnchar_id = p_mnchar_id;
 }
 
-String Mnchar::get_mnchar_id() const {return mnchar_id;}
+String Mnchar::get_mnchar_id() const { return mnchar_id; }
+
+void Mnchar::_ready() {
+  // UtilityFunctions::print("_ready just got called for Mnchar.");
+  UtilityFunctions::print("Mnchar id is:", mnchar_id);
+
+  if (mnchar_id == "0") {
+    UtilityFunctions::print("mnchar_id is '0'.");
+  } else if (mnchar_id == "1") {
+    UtilityFunctions::print("mnchar_id is '1'.");}
+// Test
+    // Retrieving the MncharBody's material, then setting its albedo
+    // (color) based on the player's ID. (This way, we can specify
+    // different colors for different player IDs, which will make
+    // different players easier to distinguish.)
+    // (I based this code on existing get_node examples and on
+    // the .hpp files for the MeshInstance3D and Material classes.
+    // godot-cpp/gen/include/godot_cpp/classes/mesh_instance3d.hpp and
+    // godot-cpp/gen/include/godot_cpp/classes/material.hpp ;
+    // and
 
 
+    auto mncharbody_mesh_material = get_node<Node3D>("Pivot")
+                                        ->get_node<MeshInstance3D>("MncharBody")
+                                        ->get_mesh()
+                                        ->surface_get_material(0);
+    
+    BaseMaterial3D* mncharbody_mesh_material_3d =
+        Object::cast_to<BaseMaterial3D>(*mncharbody_mesh_material);
 
+  // Special thanks to RamblingStranger for pointing me to
+  // Object::cast_to as a means of converting an object into a
+  // new type. (See
+  // https://discordapp.com/channels/212250894228652034/342047011778068481/1487545947608322078)
 
+    String mnchar_id_for_color = get_mnchar_id();
 
+    // Specifying a gray default color (which shouldn't be the final
+    // color of any Mnchar objects)
+    Color mnchar_color = Color(0.5, 0.5, 0.5, 1.0);
+
+    if (mnchar_id_for_color == "0")
+    {mnchar_color = Color(1.0, 0.0, 0.0, 1.0);}
+
+    else if (mnchar_id_for_color == "1")
+    {mnchar_color = Color(0.0, 1.0, 0.0, 1.0);}
+
+    mncharbody_mesh_material_3d->set_albedo(mnchar_color);
+
+    // Replacing the player's existing material with this new
+    // material:
+
+    mncharbody_mesh_material = Object::cast_to<Material>(
+    mncharbody_mesh_material_3d);
+
+    UtilityFunctions::print("Done!");
+  }
 
 void Mnchar::shoot_projectile()
 
 {
-  //UtilityFunctions::print("shoot_projectile() called within mnchar.cpp.");
-  // Retrieving our projectile:
+  // UtilityFunctions::print("shoot_projectile() called within mnchar.cpp.");
+  //  Retrieving our projectile:
   auto projectile =
       reinterpret_cast<Projectile *>(projectile_scene->instantiate());
   // Based on: //
@@ -145,14 +204,30 @@ void Mnchar::shoot_projectile()
   // https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-add-child
 }
 
+void Mnchar::_on_projectile_detector_body_entered(Node3D *node) {
+  UtilityFunctions::print(
+      "on_body_entered() just got called within mnchar.cpp.");
+  queue_free(); // This function is based on
+  // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/mob.cpp
+  // and
+  // https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-queue-free
+  // We may not actually need the *node argument here, since
+  // we're not making any updates to the node itself.
+  // In order for this function to respond to collisions with
+  // projectiles, but *not* the ground or the player itself,
+  // you'll need to update the layer and mask items within
+  // the editor. See README for more details.
+}
+
 void Mnchar::_physics_process(double delta) {
+
   // The following code allows the player to rotate, strafe,
   // move forward and back, and shoot projectiles.
 
   // Initializing x (left/right) and z (forward/back) components
   // of the player's velocity:
 
-  //UtilityFunctions::print("MncharID is", mnchar_id);
+  // UtilityFunctions::print("MncharID is", mnchar_id);
 
   float x_direction = 0;
   float z_direction = 0;
@@ -167,28 +242,28 @@ void Mnchar::_physics_process(double delta) {
   // and
   // https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html
 
-
   auto input = Input::get_singleton();
 
   // Specifying x and z directions: (These will range from -1 to 1
   // depending on how strong the player presses a given joystick.)
-  // Based on: https://docs.godotengine.org/en/stable/tutorials/2d/2d_movement.html
-  // and https://github.com/godotrecipes/characterbody3d_examples/blob/master/mini_tank.gd
+  // Based on:
+  // https://docs.godotengine.org/en/stable/tutorials/2d/2d_movement.html and
+  // https://github.com/godotrecipes/characterbody3d_examples/blob/master/mini_tank.gd
 
-
-  x_direction = input->get_axis("move_left_"+mnchar_id, 
-    "move_right_"+mnchar_id);
-  z_direction = input->get_axis("move_forward_"+mnchar_id,
-   "move_back_"+mnchar_id);
+  x_direction =
+      input->get_axis("move_left_" + mnchar_id, "move_right_" + mnchar_id);
+  z_direction =
+      input->get_axis("move_forward_" + mnchar_id, "move_back_" + mnchar_id);
 
   // Rotating the player:
   // See: godot-cpp/gen/src/classes/node3d.cpp ,
   // https://docs.godotengine.org/en/stable/tutorials/3d/using_transforms.html ,
   // and https://docs.godotengine.org/en/stable/tutorials/2d/2d_movement.html
 
-get_node<Node3D>("Pivot")->rotate_object_local(Vector3(0, 1, 0),
-   rotation_speed * input->get_axis("rotate_right_"+mnchar_id, 
-  "rotate_left_"+mnchar_id));
+  get_node<Node3D>("Pivot")->rotate_object_local(
+      Vector3(0, 1, 0),
+      rotation_speed * input->get_axis("rotate_right_" + mnchar_id,
+                                       "rotate_left_" + mnchar_id));
 
   // I chose is_action_just_pressed here so that a projectile would
   // only be fired when the button is first registered as pressed.
@@ -196,7 +271,7 @@ get_node<Node3D>("Pivot")->rotate_object_local(Vector3(0, 1, 0),
   // was held down.)
   // See:
   // godot-cpp/gen/include/godot_cpp/classes/input.hpp
-  if (input->is_action_just_pressed("fire_"+mnchar_id)) {
+  if (input->is_action_just_pressed("fire_" + mnchar_id)) {
 
     shoot_projectile();
   }
@@ -219,17 +294,18 @@ get_node<Node3D>("Pivot")->rotate_object_local(Vector3(0, 1, 0),
   // Initializing the player's velocity:
   // (We'll then adjust its x and z components based on the
   // x_direction and z_direction values calculated earlier.)
-	// See /godot-cpp/src/variant/vector3.cpp and
-	// godot-cpp/include/godot_cpp/variant/vector3.hpp
-	// Based on https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html
-  // and and https://github.com/godotrecipes/characterbody3d_examples/blob/master/mini_tank.gd
+  // See /godot-cpp/src/variant/vector3.cpp and
+  // godot-cpp/include/godot_cpp/variant/vector3.hpp
+  // Based on
+  // https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html
+  // and and
+  // https://github.com/godotrecipes/characterbody3d_examples/blob/master/mini_tank.gd
   Vector3 target_velocity = Vector3(0, 0, 0);
-
 
   // I would like Mnchar to be able to move forward,
   // back, left, or right relative to its current position-but only
   // *one* of those directions (e.g. not diagonally). Therefore,
-  // I added in code below that finds the absolute value of 
+  // I added in code below that finds the absolute value of
   // the x and z directions, then moves the player along the axis
   // with the greatest absolute value. This isn't strictly necessary,
   // but I find it to make Mnchar's movement somewhat more
@@ -240,24 +316,25 @@ get_node<Node3D>("Pivot")->rotate_object_local(Vector3(0, 1, 0),
   float abs_z_direction = std::abs(z_direction);
   float abs_x_direction = std::abs(x_direction);
 
-// UtilityFunctions::print("abs(z_direction): ", abs_z_direction, "abs(x_direction): ", abs_x_direction);
+  // UtilityFunctions::print("abs(z_direction): ", abs_z_direction,
+  // "abs(x_direction): ", abs_x_direction);
 
-
-// We could also use target_velocity = rather than target_velocity +=;
-// however, the existing code will work better in case we ultimately
-// want to allow the player to move along the x and z axes
-// at the same time.
-  if (abs_z_direction >= abs_x_direction)
-  {target_velocity +=
-      -1 * player_transform_basis_z * z_direction * movement_speed;}
-  else {
-  target_velocity +=
-      -1 * player_transform_basis_x * x_direction * movement_speed;
+  // We could also use target_velocity = rather than target_velocity +=;
+  // however, the existing code will work better in case we ultimately
+  // want to allow the player to move along the x and z axes
+  // at the same time.
+  if (abs_z_direction >= abs_x_direction) {
+    target_velocity +=
+        -1 * player_transform_basis_z * z_direction * movement_speed;
+  } else {
+    target_velocity +=
+        -1 * player_transform_basis_x * x_direction * movement_speed;
   }
-  //UtilityFunctions::print("player's target velocity:", target_velocity);
-	// Based on https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html
-  // and and https://github.com/godotrecipes/characterbody3d_examples/blob/master/mini_tank.gd
-
+  // UtilityFunctions::print("player's target velocity:", target_velocity);
+  //  Based on
+  //  https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html
+  // and and
+  // https://github.com/godotrecipes/characterbody3d_examples/blob/master/mini_tank.gd
 
   set_velocity(target_velocity);
 

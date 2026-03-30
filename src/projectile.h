@@ -12,9 +12,14 @@ class Projectile : public CharacterBody3D {
 	GDCLASS(Projectile, CharacterBody3D)
 
 private:
-	double time_passed;
+	double projectile_speed = 64; 
 
-	double projectile_speed; 
+	double active_time = 0; // Will store how long a projectile has
+	// been active (thus allowing us to delete it after a certain amount
+	// of time has passed). This is based on 
+	// https://docs.godotengine.org/en/stable/tutorials/scripting/idle_and_physics_processing.html
+
+
 
 protected:
 	static void _bind_methods();

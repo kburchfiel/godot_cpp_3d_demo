@@ -51,18 +51,17 @@ void Projectile::start(Transform3D transform) {
 
   // shoot_origin and shoot_dir derive from 
   // the player.gd code in the above link .
-  UtilityFunctions::print("start() just got called for a projectile.");
+  //UtilityFunctions::print("start() just got called for a projectile.");
 
 
-  UtilityFunctions::print("transform's basis is", 
-    transform.get_basis());
+  // UtilityFunctions::print("transform's basis is", transform.get_basis());
 
   // set_transform derives from 
   // godot-cpp/gen/src/classes/node3d.cpp (which I may have come
   // across while doing a content search for 'transform').
   Projectile::set_transform(transform);
   
-  UtilityFunctions::print("transform is now: ", transform);
+  // UtilityFunctions::print("transform is now: ", transform);
 
 
   auto projectile_basis_z = Projectile::get_transform().get_basis()[2];
@@ -103,6 +102,7 @@ void Projectile::start(Transform3D transform) {
 
 }
 
+
 // The following function is based on 
 // https://docs.godotengine.org/en/stable/tutorials/physics/using_character_body_2d.html and
 // https://docs.godotengine.org/en/stable/tutorials/3d/using_transforms.html#introduction .
@@ -113,6 +113,16 @@ auto collision = move_and_collide(projectile_velocity * delta);
 // This section could be expanded using the code in the previous
 // link. (You'd just need to rework it in C++.)
 
+//UtilityFunctions::print("active_time is", active_time);
+
+// Remove the projectile from the game if it has been active
+// for at least two seconds. (This should give it plenty of time
+// to travel across the game area, even diagonally from one corner to
+// the opposite corner.)
+if (active_time >= 2)
+{queue_free();}
+
+active_time += delta;
 
 
 

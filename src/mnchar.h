@@ -27,12 +27,14 @@ class Mnchar : public CharacterBody3D {
 
 private:
 	// See: https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html
-	double movement_speed; // In meters per second
+	double movement_speed = 14; // In meters per second
 	// Placed in the private category following the example found at
 	// // Based on https://docs.godotengine.org/en/4.6/tutorials/scripting/cpp/gdextension_cpp_example.html 
 	Ref<PackedScene> projectile_scene; // Based on:
 	// https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.h
 	double rotation_speed = 0.15; 
+
+
 
 	String mnchar_id = "0"; // Added to (hopefully) assist with multiplayer
 	// code. (My idea is to assign different IDs to different Mnchar
@@ -70,6 +72,17 @@ public:
     // https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html
 
 	void shoot_projectile();
+
+	void _on_projectile_detector_body_entered(Node3D *node);
+	// This is based on the _on_body_entered() function
+	// at https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/player.h .
+	// I also found a body_entered reference with a Node3D type at
+	// godot-cpp/gdextension/extension_api-4-5.json .
+
+
+	void _ready(); // Defining a function that will run right when
+	// a Mnchar object appears. See 
+	// https://gamedev.stackexchange.com/questions/207050/what-is-the-difference-between-onready-and-ready 
 
 };
 
