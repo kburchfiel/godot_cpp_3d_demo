@@ -155,6 +155,27 @@ With help from RamblingStranger on discord (https://discordapp.com/channels/2122
     * However, I think this *also* sometimes caused the editor to crash when I attempted to reopen the editor. (I think what happened was that (1) the scene reference got lost; (2) the editor then attempted to open an active scene; and (3) it then crashed because it had no scene to load. Removing the reference from my code (e.g. by removing 
     `reinterpret_cast<Mnchar*>(get_mnchar_scene()->instantiate());` from main.cpp); recompiling the script; loading the scene; adding the reference; and then recompiling the script helped fix this.
 
+    [Note to self: the packed scene entry within main.tscn consists of two lines. The first line, 
+    located right below `[gd_scene format=3 uid="uid://cqow47bch5ocs"]`, reads:
+
+    `[ext_resource type="PackedScene" uid="uid://dc3nje2ppsfhy" path="res://mnchar.tscn" id="1_ig7tw"]`
+
+    Another line, located right below `[node name="Main" type="Main" unique_id=1443214972]`, reads:
+
+    `packed_scene = ExtResource("1_ig7tw")`
+
+Similarly, for the mnchar.tscn file, below the line
+
+`[gd_scene format=3 uid="uid://dc3nje2ppsfhy"]`, you should see:
+
+`[ext_resource type="PackedScene" uid="uid://ckhuieb6lfi2" path="res://projectile.tscn" id="1_0j8lf"]`
+
+Then, below `[node name="Mnchar" type="Mnchar" unique_id=1052373598]`, you should see:
+
+`packed_scene = ExtResource("1_0j8lf")`
+
+    If the game crashes again, try pasting these lines into your main.tscn and mnchar.tscn files.]
+
 * As mentioned within the Multiplayer section: If you're trying to add a GDExtension class to a scene, make sure that the child nodes referenced by your C++ code (e.g. the Pivot node in the case of the Mnchar class) are present within the editor. See the Multiplayer section for more details.
 
 * My game crashed when I attempted to use a std::Map() to assign colors to players based on their ID. I'll need to look into this further, but in the meantime, I've replaced my Map() code with a simple if/else if setup.

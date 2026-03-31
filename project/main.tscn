@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://cqow47bch5ocs"]
 
+[ext_resource type="PackedScene" uid="uid://dc3nje2ppsfhy" path="res://mnchar.tscn" id="1_ig7tw"]
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
 size = Vector3(60, 2, 60)
 
@@ -7,6 +9,7 @@ size = Vector3(60, 2, 60)
 size = Vector3(60, 2, 60)
 
 [node name="Main" type="Main" unique_id=1443214972]
+packed_scene = ExtResource("1_ig7tw")
 
 [node name="Ground" type="StaticBody3D" parent="." unique_id=1722754095]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)

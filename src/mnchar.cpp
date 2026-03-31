@@ -95,76 +95,80 @@ void Mnchar::set_mnchar_id(const String p_mnchar_id) {
   mnchar_id = p_mnchar_id;
 }
 
-String Mnchar::get_mnchar_id() const { return mnchar_id; }
+Color Mnchar::get_character_color() const { return character_color; }
 
-void Mnchar::start(String mnchar_id_arg, Vector3 translate_val) {
-  // UtilityFunctions::print("start just got called for Mnchar.");
-  set_mnchar_id(mnchar_id_arg);
-  UtilityFunctions::print("Mnchar id is:", mnchar_id);
+void Mnchar::set_character_color(const Color character_color_arg) {
 
-  if (mnchar_id == "0") {
-    UtilityFunctions::print("mnchar_id is '0'.");
-  } else if (mnchar_id == "1") {
-    UtilityFunctions::print("mnchar_id is '1'.");}
-// Test
-    // Retrieving the MncharBody's material, then setting its albedo
-    // (color) based on the player's ID. (This way, we can specify
-    // different colors for different player IDs, which will make
-    // different players easier to distinguish.)
-    // (I based this code on existing get_node examples and on
-    // the .hpp files for the MeshInstance3D and Material classes.
-    // godot-cpp/gen/include/godot_cpp/classes/mesh_instance3d.hpp and
-    // godot-cpp/gen/include/godot_cpp/classes/material.hpp ;
-    // and
+  // Retrieving the MncharBody's material, then setting its albedo
+  // (color) based on the player's ID. (This way, we can specify
+  // different colors for different player IDs, which will make
+  // different players easier to distinguish.)
+  // (I based this code on existing get_node examples and on
+  // the .hpp files for the MeshInstance3D and Material classes.
+  // godot-cpp/gen/include/godot_cpp/classes/mesh_instance3d.hpp and
+  // godot-cpp/gen/include/godot_cpp/classes/material.hpp ;
+  // and
 
+  auto mncharbody_mesh_material = get_node<Node3D>("Pivot")
+                                      ->get_node<MeshInstance3D>("MncharBody")
+                                      ->get_mesh()
+                                      ->surface_get_material(0);
 
-    auto mncharbody_mesh_material = get_node<Node3D>("Pivot")
-                                        ->get_node<MeshInstance3D>("MncharBody")
-                                        ->get_mesh()
-                                        ->surface_get_material(0);
-    
-    BaseMaterial3D* mncharbody_mesh_material_3d =
-        Object::cast_to<BaseMaterial3D>(*mncharbody_mesh_material);
+  BaseMaterial3D *mncharbody_mesh_material_3d =
+      Object::cast_to<BaseMaterial3D>(*mncharbody_mesh_material);
 
   // Special thanks to RamblingStranger for pointing me to
   // Object::cast_to as a means of converting an object into a
   // new type. (See
   // https://discordapp.com/channels/212250894228652034/342047011778068481/1487545947608322078)
 
-    String mnchar_id_for_color = get_mnchar_id();
+  mncharbody_mesh_material_3d->set_albedo(character_color_arg);
 
-    // Specifying a gray default color (which shouldn't be the final
-    // color of any Mnchar objects)
-    Color mnchar_color = Color(0.5, 0.5, 0.5, 1.0);
+  // Replacing the player's existing material with this new
+  // material:
 
-    if (mnchar_id_for_color == "0")
-    {mnchar_color = Color(1.0, 0.0, 0.0, 1.0);}
+  auto new_mncharbody_mesh_material =
+      Object::cast_to<Material>(mncharbody_mesh_material_3d);
 
-    else if (mnchar_id_for_color == "1")
-    {mnchar_color = Color(0.0, 1.0, 0.0, 1.0);}
+  get_node<Node3D>("Pivot")
+      ->get_node<MeshInstance3D>("MncharBody")
+      ->get_mesh()
+      ->surface_set_material(0,
+                             new_mncharbody_mesh_material);
 
-    mncharbody_mesh_material_3d->set_albedo(mnchar_color);
+// NOTE: It's crucial that you activate the 'local to scene' feature
+// of the Mnchar's material. Otherwise, whenever you change the
+// material for one player, it will get changed for other players.
+// I am very grateful to Tobias Wink at
+// https://www.somethinglikegames.de/en/blog/2023/material-synchronization/
+// for helping me solve this!
+}
 
-    // Replacing the player's existing material with this new
-    // material:
+String Mnchar::get_mnchar_id() const { return mnchar_id; }
 
-    mncharbody_mesh_material = Object::cast_to<Material>(
-    mncharbody_mesh_material_3d);
+void Mnchar::start(String mnchar_id_arg, Vector3 translate_val,
+                   Color mnchar_color_arg) {
+  // UtilityFunctions::print("start just got called for Mnchar.");
+  set_mnchar_id(mnchar_id_arg);
+  UtilityFunctions::print("Mnchar id is:", mnchar_id);
 
-// Moving the Mnchar to its starting point:
-translate(translate_val);
 
-// Note: I had originally tried this code:
-//get_node<Node3D>("Pivot") -> translate(translate_val);
-// However, this caused issues when multiple characters
-// were added to the scene--possibly because the transforms
-// of the actual Mnchar class weren't getting changed
-// and were thus overlapping with one another. (This caused
-// them to shoot up in the sky, which was both frustrating
-// and hilarious haha)
+  set_character_color(mnchar_color_arg);
 
-    UtilityFunctions::print("Done!");
-  }
+  // Moving the Mnchar to its starting point:
+  translate(translate_val);
+
+  // Note: I had originally tried this code:
+  // get_node<Node3D>("Pivot") -> translate(translate_val);
+  // However, this caused issues when multiple characters
+  // were added to the scene--possibly because the transforms
+  // of the actual Mnchar class weren't getting changed
+  // and were thus overlapping with one another. (This caused
+  // them to shoot up in the sky, which was both frustrating
+  // and hilarious haha)
+
+  UtilityFunctions::print("Done!");
+}
 
 void Mnchar::shoot_projectile()
 
@@ -233,6 +237,14 @@ void Mnchar::_on_projectile_detector_body_entered(Node3D *node) {
 }
 
 void Mnchar::_physics_process(double delta) {
+
+  // if (get_mnchar_id() == "0")
+  // {set_character_color(Color(1.0, 0.0, 0.0, 1));}
+
+  // else if (get_mnchar_id() == "1")
+  // {set_character_color(Color(0.0, 1.0, 0.0, 1));}
+
+  // UtilityFunctions::print("mnchar_id is:", get_mnchar_id());
 
   // The following code allows the player to rotate, strafe,
   // move forward and back, and shoot projectiles.
