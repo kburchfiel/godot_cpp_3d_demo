@@ -28,6 +28,7 @@ This project is an opportunity for me to *learn* how to use GDExtension, togethe
 
 * My [C++-based Your First 2D Game tutorial (YF2DGC++)](https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/tree/main)--which is based heavily on [a similar tutorial by J-Dax for Godot 4.3](https://github.com/j-dax/gd-cpp). (That tutorial was released under the BSD 3-Clause license; my copy is released under the MIT license.)
 
+* Also of note is Vorlac's GDExtension documentation, available at https://vorlac.github.io/gdextension-docs/getting_started/quick-start/ . I ought to give this document a thorough read at some point, as it should help clarify many points of confusion!
 
 ## Part 1: Initial setup
 
@@ -138,15 +139,18 @@ Next, I created a second copy of my mnchar.tscn and projectile.tscn scenes, then
 
 ## Part 7: Simplifying player setup
 
-With help from RamblingStranger on discord (https://discordapp.com/channels/212250894228652034/342047011778068481/1487545947608322078), I was able to update Mnchar colors within my C++ code based on Mnchar IDs. Next, I plan to incorporate a main.cpp script into the game that adds Mnchar characters into the game area and sets their IDs. (This will make my game setup more flexible, as it will ultimately allow players to specify how many main characters to add to the game.)
+With help from RamblingStranger on discord (https://discordapp.com/channels/212250894228652034/342047011778068481/1487545947608322078), I was able to update Mnchar colors within my C++ code based on Mnchar IDs. I also added main.cpp and main.h scripts that configure, then add, Mnchar characters into the game area. (This will make my game setup more flexible, as it will ultimately allow players to specify how many main characters to add to the game.)
+
 
 ## Next steps (an incomplete list!)
 
-1. Keep only one copy of projectile and Mnchar scenes, then use main.h and main.cpp scripts to add a certain number of these players to your main-game scene. (Make sure to set each of these Mnchar items' IDs accordingly.)
+1. Update your projectile.cpp code such that their colors match those of the Mnchar objects firing them. (You'll probably need to make these projectiles' material and mesh items local to scene within the editor; see Mnchar::set_character_color for more details.)
 
-2. Update your projectile.cpp code such that their colors match those of the Mnchar objects firing them.
+1. Create HUD code that (among other things) allows players to specify how many Mnchar entities to add to the scene.
 
-3. Create HUD code that (among other things) allows players to specify how many Mnchar entities to add to the scene.
+1. Add additional input_map settings that allow up to eight players to be supported.
+
+1. Try adding in code that determines who won the game (e.g. the last player(s) standing); how many hits each player got; etc.
 
 ## Troubleshooting notes
 
