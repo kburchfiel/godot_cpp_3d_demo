@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dc3nje2ppsfhy"]
 
-[ext_resource type="PackedScene" uid="uid://ckhuieb6lfi2" path="res://projectile_0.tscn" id="1_yx51v"]
+[ext_resource type="PackedScene" uid="uid://ckhuieb6lfi2" path="res://projectile.tscn" id="1_0j8lf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1ngy0"]
 albedo_color = Color(1, 0, 0, 1)
@@ -15,7 +15,7 @@ material = SubResource("StandardMaterial3D_1ngy0")
 [sub_resource type="BoxShape3D" id="BoxShape3D_ygbm5"]
 
 [node name="Mnchar" type="Mnchar" unique_id=1052373598]
-packed_scene = ExtResource("1_yx51v")
+packed_scene = ExtResource("1_0j8lf")
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1, 0)
 
 [node name="Pivot" type="Node3D" parent="." unique_id=1861752919]

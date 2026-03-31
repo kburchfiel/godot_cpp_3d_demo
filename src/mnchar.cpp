@@ -97,8 +97,9 @@ void Mnchar::set_mnchar_id(const String p_mnchar_id) {
 
 String Mnchar::get_mnchar_id() const { return mnchar_id; }
 
-void Mnchar::_ready() {
-  // UtilityFunctions::print("_ready just got called for Mnchar.");
+void Mnchar::start(String mnchar_id_arg, Vector3 translate_val) {
+  // UtilityFunctions::print("start just got called for Mnchar.");
+  set_mnchar_id(mnchar_id_arg);
   UtilityFunctions::print("Mnchar id is:", mnchar_id);
 
   if (mnchar_id == "0") {
@@ -149,6 +150,18 @@ void Mnchar::_ready() {
 
     mncharbody_mesh_material = Object::cast_to<Material>(
     mncharbody_mesh_material_3d);
+
+// Moving the Mnchar to its starting point:
+translate(translate_val);
+
+// Note: I had originally tried this code:
+//get_node<Node3D>("Pivot") -> translate(translate_val);
+// However, this caused issues when multiple characters
+// were added to the scene--possibly because the transforms
+// of the actual Mnchar class weren't getting changed
+// and were thus overlapping with one another. (This caused
+// them to shoot up in the sky, which was both frustrating
+// and hilarious haha)
 
     UtilityFunctions::print("Done!");
   }

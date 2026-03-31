@@ -14,8 +14,7 @@ class Main: public Node {
 
     private:
 
-    Ref<PackedScene> mnchar_0_scene;
-    Ref<PackedScene> mnchar_1_scene;
+    Ref<PackedScene> mnchar_scene;
 
 
 protected:
@@ -27,12 +26,8 @@ public:
 Main();
 ~Main();
 
-Ref<PackedScene> get_mnchar_0_scene();
-void set_mnchar_0_scene(Ref<PackedScene>);
-
-Ref<PackedScene> get_mnchar_1_scene();
-void set_mnchar_1_scene(Ref<PackedScene>);
-
+Ref<PackedScene> get_mnchar_scene();
+void set_mnchar_scene(Ref<PackedScene>);
 
 void _ready();
 

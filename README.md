@@ -152,9 +152,13 @@ With help from RamblingStranger on discord (https://discordapp.com/channels/2122
 
 * I sometimes found, particularly after compiling my C++ code, that the Projectile.tscn scene would sometimes disappear from my Packed Scene entry within my Mnchar's properties. (An "empty" message would appear in its place.) This would then cause the game to crash if I attempted to fire a projectile, as Godot wouldn't know what scene to use as the basis for projectiles. I'm not sure whether this is due to a glitch within Godot 4.6 or some issue with my own setup, but either way, the fix was thankfully quite simple: I simply had to reload the projectile.tscn scene, a process that takes only a few clicks.
 
+    * However, I think this *also* sometimes caused the editor to crash when I attempted to reopen the editor. (I think what happened was that (1) the scene reference got lost; (2) the editor then attempted to open an active scene; and (3) it then crashed because it had no scene to load. Removing the reference from my code (e.g. by removing 
+    `reinterpret_cast<Mnchar*>(get_mnchar_scene()->instantiate());` from main.cpp); recompiling the script; loading the scene; adding the reference; and then recompiling the script helped fix this.
+
 * As mentioned within the Multiplayer section: If you're trying to add a GDExtension class to a scene, make sure that the child nodes referenced by your C++ code (e.g. the Pivot node in the case of the Mnchar class) are present within the editor. See the Multiplayer section for more details.
 
 * My game crashed when I attempted to use a std::Map() to assign colors to players based on their ID. I'll need to look into this further, but in the meantime, I've replaced my Map() code with a simple if/else if setup.
+
 
 ### An aside: Finding C++ code equivalents to GDScript code
 

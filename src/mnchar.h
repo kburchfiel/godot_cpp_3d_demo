@@ -80,7 +80,7 @@ public:
 	// godot-cpp/gdextension/extension_api-4-5.json .
 
 
-	void _ready(); // Defining a function that will run right when
+	void start(String mnchar_id_arg, Vector3 translate_val); // Defining a function that will run right when
 	// a Mnchar object appears. See 
 	// https://gamedev.stackexchange.com/questions/207050/what-is-the-difference-between-onready-and-ready 
 
