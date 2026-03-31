@@ -146,12 +146,28 @@ void Mnchar::set_character_color(const Color character_color_arg) {
 
 String Mnchar::get_mnchar_id() const { return mnchar_id; }
 
-void Mnchar::start(String mnchar_id_arg, Vector3 translate_val,
-                   Color mnchar_color_arg) {
+
+void Mnchar::start(String mnchar_id_arg) {
+  // This function will specify, based on its ID argument,
+  // the color and starting location for each Mnchar--thus making
+  // it easier to differentiate each Mnchar instance
+  // from each other.
   // UtilityFunctions::print("start just got called for Mnchar.");
   set_mnchar_id(mnchar_id_arg);
   UtilityFunctions::print("Mnchar id is:", mnchar_id);
 
+  // Initializing a default color that shouldn't actually show
+  // up within any characters:
+  Color mnchar_color_arg = Color(0.5, 0.5, 0.5, 1);
+  Vector3 translate_val = Vector3(0, 0, 0);
+
+  if (mnchar_id_arg == "0")
+  {mnchar_color_arg = Color(1.0, 0.0, 0.0, 1);
+  translate_val = Vector3(20, 0, -20);}
+
+  else if (mnchar_id_arg == "1")
+  {mnchar_color_arg = Color(0.0, 1.0, 0.0, 1);
+  translate_val = Vector3(-20, 0, -20);}
 
   set_character_color(mnchar_color_arg);
 
@@ -167,7 +183,7 @@ void Mnchar::start(String mnchar_id_arg, Vector3 translate_val,
   // them to shoot up in the sky, which was both frustrating
   // and hilarious haha)
 
-  UtilityFunctions::print("Done!");
+  // UtilityFunctions::print("Done!");
 }
 
 void Mnchar::shoot_projectile()

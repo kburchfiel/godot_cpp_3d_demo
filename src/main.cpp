@@ -28,18 +28,18 @@ Main::~Main() {}
 void Main::_ready() {
 
   auto mnchar_0 = reinterpret_cast<Mnchar *>(get_mnchar_scene()->instantiate());
-  mnchar_0->start("0", Vector3(20, 0, -20), Color(1.0, 0.0, 0.0, 1));
+  mnchar_0->start("0");
 
   add_child(mnchar_0);
 
   auto mnchar_1 = reinterpret_cast<Mnchar *>(mnchar_scene->instantiate());
-  mnchar_1->start("1", Vector3(-20, 0, -20), Color(0.0, 1.0, 0.0, 1));
+  mnchar_1->start("1");
 
   add_child(mnchar_1);
 
-  UtilityFunctions::print("At the end of Main::_ready, \
-the mnchar_id values of mnchar_0 and mnchar_1 are \
-",
-                          mnchar_0->get_mnchar_id(), " and ",
-                          mnchar_1->get_mnchar_id());
+//   UtilityFunctions::print("At the end of Main::_ready, \
+// the mnchar_id values of mnchar_0 and mnchar_1 are \
+// ",
+//                           mnchar_0->get_mnchar_id(), " and ",
+//                           mnchar_1->get_mnchar_id());
 }
