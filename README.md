@@ -146,7 +146,9 @@ With help from RamblingStranger on discord (https://discordapp.com/channels/2122
 
 1. Update your projectile.cpp code such that their colors match those of the Mnchar objects firing them. (You'll probably need to make these projectiles' material and mesh items local to scene within the editor; see Mnchar::set_character_color for more details.)
 
-1. Create HUD code that (among other things) allows players to specify how many Mnchar entities to add to the scene.
+1. Create HUD code that (among other things) allows players to specify how many Mnchar entities to add to the scene. (This will likely require changing Main::_ready() to Main::start() (or a similar function) so that players will have the chance to set this value before the game actually begins. 
+
+*Alternatively, you could try adding players within Main::process() based on a certain button being pressed (e.g. a joystick button); that way, players could simply add themselves to the game. (Relevant pseudocode: "if button_a_7 is pressed: add_child(mnchar_7).) Just make sure that players can't then add themselves back to the game (unless you want them to be able to)! You could further refine this by allowing players to add themselves only while a 5-second countdown timer is active--or by only checking for inputs while the time (int time = 0; time+= delta) of process() is below 5--or something similar.*
 
 1. Add additional input_map settings that allow up to eight players to be supported.
 
