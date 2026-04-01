@@ -141,6 +141,14 @@ Next, I created a second copy of my mnchar.tscn and projectile.tscn scenes, then
 
 With help from RamblingStranger on discord (https://discordapp.com/channels/212250894228652034/342047011778068481/1487545947608322078), I was able to update Mnchar colors within my C++ code based on Mnchar IDs. I also added main.cpp and main.h scripts that configure, then add, Mnchar characters into the game area. (This will make my game setup more flexible, as it will ultimately allow players to specify how many main characters to add to the game.)
 
+## Part 8: Configuring a HUD and a simple start menu
+
+At this point, the game was configured to begin immediately with two players whenever it was launched. I instead wanted to allow the players to choose how many characters to include, *then* begin the game.
+
+To implement this feature, I created a new Hud class, then instantiated it as a child of my Main.tscn scene. I then created a _process function within Hud that would let me both (1) specify the number of characters to include and (2) start the game when requested by the user. I added a "start_game" signal to my Hud code and connected it to an _on_hud_start_game function within Main.cpp that would (1) retrieve the number of players requested by the player and (2) add that number of players to the scene.
+
+I still need to add in player inputs, colors, and start locations to accommodate 3-8 players, but the game is close to being able to support up to 8 players at this point.
+
 
 ## Next steps (an incomplete list!)
 
@@ -158,8 +166,8 @@ With help from RamblingStranger on discord (https://discordapp.com/channels/2122
 
 * I sometimes found, particularly after compiling my C++ code, that the Projectile.tscn scene would sometimes disappear from my Packed Scene entry within my Mnchar's properties. (An "empty" message would appear in its place.) This would then cause the game to crash if I attempted to fire a projectile, as Godot wouldn't know what scene to use as the basis for projectiles. I'm not sure whether this is due to a glitch within Godot 4.6 or some issue with my own setup, but either way, the fix was thankfully quite simple: I simply had to reload the projectile.tscn scene, a process that takes only a few clicks.
 
-    * However, I think this *also* sometimes caused the editor to crash when I attempted to reopen the editor. (I think what happened was that (1) the scene reference got lost; (2) the editor then attempted to open an active scene; and (3) it then crashed because it had no scene to load. Removing the reference from my code (e.g. by removing 
-    `reinterpret_cast<Mnchar*>(get_mnchar_scene()->instantiate());` from main.cpp); recompiling the script; loading the scene; adding the reference; and then recompiling the script helped fix this.
+    * However, I think this *also* sometimes caused the editor to crash when I attempted to reopen the editor. (I think what happened was that (1) the Mnchar.tscn reference within main.tscn got lost; (2) the editor then attempted to open an active Main scene; and (3) it then crashed because it didn't know what packed scene to load. Removing the reference from my code (e.g. by removing 
+    `reinterpret_cast<Mnchar*>(get_mnchar_scene()->instantiate());` from main.cpp or adding `return` before that line); recompiling the script; loading the scene; adding the reference; and then recompiling the script helped fix this.
 
     [Note to self: the packed scene entry within main.tscn consists of two lines. The first line, 
     located right below `[gd_scene format=3 uid="uid://cqow47bch5ocs"]`, reads:
@@ -186,6 +194,11 @@ Then, below `[node name="Mnchar" type="Mnchar" unique_id=1052373598]`, you shoul
 
 * My game crashed when I attempted to use a std::Map() to assign colors to players based on their ID. I'll need to look into this further, but in the meantime, I've replaced my Map() code with a simple if/else if setup.
 
+* If you're trying to add a new GDExtension scene, you'll need to make sure that all the nodes referenced by that scene are present within your code. For instance, before you can make the Hud class the root node of hud.tscn, you'll need to make sure to have a Label named 'Message' present as a child of your root node. 
+
+This might seem like a Catch 22: how can you create a child of a root Hud node if you can't add the Hud node to begin with? The solution is to make the class that your GDExtension class extends (CanvasLayer, in the case of Hud) the root node of the scene; add all child nodes referenced by the code to it; and *then* switch the extended class to a Hud class. (You can do so by right-clicking on the extended class (e.g. CanvasLayer); selecting 'Change Type'; and then selecting your GDExtension class. You may then want to rename the class to your GDExtension class in order to avoid any confusion.)
+
+* If the Godot editor doesn't appear to know about a newly-created GDExtension class, try restarting it. If it still doesn't appear, make sure you've added a reference to this class within your register_types.cpp file. (For instance, to get a custom Hud class to appear, make sure to (1) add `GDREGISTER_CLASS(Hud)` within register_types.cpp's initialization function (called `initialize_example_module()` in this project) and (2) add `#include "hud.h"` within your list of include statements.
 
 ### An aside: Finding C++ code equivalents to GDScript code
 

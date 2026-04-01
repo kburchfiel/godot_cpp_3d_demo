@@ -27,4 +27,6 @@ public:
   void set_mnchar_scene(Ref<PackedScene>);
 
   void _ready();
+
+  void _on_hud_start_game();
 };

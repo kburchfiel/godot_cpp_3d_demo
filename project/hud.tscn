@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://c7uo25x7v18tn"]
+
+[node name="Hud" type="Hud" unique_id=567330388]
+
+[node name="Message" type="Label" parent="." unique_id=1662724339]
+offset_right = 40.0
+offset_bottom = 23.0

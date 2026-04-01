@@ -6,6 +6,8 @@
 #include "mnchar.h"
 #include "projectile.h"
 #include "main.h"
+#include "hud.h"
+
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -21,6 +23,7 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 	GDREGISTER_CLASS(Mnchar);
 	GDREGISTER_CLASS(Projectile);
 	GDREGISTER_CLASS(Main);
+	GDREGISTER_CLASS(Hud);
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {
