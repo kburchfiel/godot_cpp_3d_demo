@@ -20,6 +20,8 @@
 #include <godot_cpp/classes/base_material3d.hpp>
 #include <godot_cpp/classes/shader_material.hpp>
 #include <godot_cpp/classes/standard_material3d.hpp>
+#include <godot_cpp/variant/typed_dictionary.hpp>
+#include <godot_cpp/variant/dictionary.hpp>
 using namespace godot;
 
 // The following bind_methods code is based on similar code found
@@ -146,6 +148,12 @@ void Mnchar::set_character_color(const Color character_color_arg) {
 
 String Mnchar::get_mnchar_id() const { return mnchar_id; }
 
+// For some reason, the following code isn't working--I'll need
+// to debug this further.
+// TypedDictionary<String, Vector3> id_location_tdict;
+
+// id_location_tdict[String("0")] = Vector3(20, 0, -20);
+// id_location_tdict[String("1")] = Vector3(-20, 0, -20);
 
 void Mnchar::start(String mnchar_id_arg) {
   // This function will specify, based on its ID argument,

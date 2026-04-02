@@ -33,17 +33,18 @@ void Main::_ready() {
 
 }
 
-void Main:: _on_hud_start_game()
+void Main:: _on_hud_start_game(int players_to_include)
 {
   // Determining how many players to add:
   // (Note: This could probably also be retrieved by emitting
   // a player-count argument along with the "start_game" signal.)
-  int players_to_add = get_node<Hud>("Hud")->players_to_include;
-  UtilityFunctions::print(players_to_add);
+  // int players_to_include = get_node<Hud>("Hud")->players_to_include;
+  UtilityFunctions::print("Received the following players_to_include \
+argument from the signal: ", players_to_include);
 
-// Adding as many players to our scene as specified by players_to_add
+// Adding as many players to our scene as specified by players_to_include
 // (while also specifying unique IDs for them)
-  for (int i = 0; i < players_to_add; i++)
+  for (int i = 0; i < players_to_include; i++)
   // Remember that valid player IDs will range from 0 to 7--so,
 // for a 2-player game, we'll want i to iterate from 0 to 1 
 // (inclusive).

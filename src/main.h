@@ -28,5 +28,5 @@ public:
 
   void _ready();
 
-  void _on_hud_start_game();
+  void _on_hud_start_game(int players_to_include);
 };
