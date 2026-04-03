@@ -48,14 +48,22 @@ argument from the signal: ", players_to_include);
   // Remember that valid player IDs will range from 0 to 7--so,
 // for a 2-player game, we'll want i to iterate from 0 to 1 
 // (inclusive).
-{String new_player_id = String::num(i).substr(0, 1);
+{String mnchar_id_arg = String::num(i).substr(0, 1);
   // substr() should convert "3.0" to "3", which will be useful
   // for accurately setting IDs.
+
+  // Determining the colors and translate values that correspond
+  // to this ID:
+  Color mnchar_color_arg = mnchar_id_color_dict[mnchar_id_arg];
+  Vector3 mnchar_translate_arg = mnchar_id_location_dict[mnchar_id_arg];
+
 
   // At least two players will always be added.
   auto new_mnchar = reinterpret_cast<Mnchar *>(
   get_mnchar_scene()->instantiate());
-  new_mnchar->start(new_player_id);
+
+  new_mnchar->start(mnchar_id_arg, mnchar_color_arg, 
+  mnchar_translate_arg);
   add_child(new_mnchar);
 
 

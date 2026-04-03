@@ -46,6 +46,7 @@ if (can_launch_new_game == true) // We'll only want to enable
 // the following functionality if a game isn't aready in progress.
 {
 
+
     auto input = Input::get_singleton();
     // This code will only recognize the device with the ID 0 
     // (to which "fire_0" is linked).

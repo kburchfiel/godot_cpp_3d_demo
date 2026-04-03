@@ -21,7 +21,7 @@
 #include <godot_cpp/classes/shader_material.hpp>
 #include <godot_cpp/classes/standard_material3d.hpp>
 #include <godot_cpp/variant/typed_dictionary.hpp>
-#include <godot_cpp/variant/dictionary.hpp>
+
 using namespace godot;
 
 // The following bind_methods code is based on similar code found
@@ -155,32 +155,20 @@ String Mnchar::get_mnchar_id() const { return mnchar_id; }
 // id_location_tdict[String("0")] = Vector3(20, 0, -20);
 // id_location_tdict[String("1")] = Vector3(-20, 0, -20);
 
-void Mnchar::start(String mnchar_id_arg) {
-  // This function will specify, based on its ID argument,
-  // the color and starting location for each Mnchar--thus making
+void Mnchar::start(String mnchar_id_arg, Color mnchar_color_arg,
+Vector3 mnchar_translate_arg) {
+  // This function will specify the ID, 
+  // color, and starting location for each Mnchar--thus making
   // it easier to differentiate each Mnchar instance
   // from each other.
   // UtilityFunctions::print("start just got called for Mnchar.");
   set_mnchar_id(mnchar_id_arg);
   UtilityFunctions::print("Mnchar id is:", mnchar_id);
 
-  // Initializing a default color that shouldn't actually show
-  // up within any characters:
-  Color mnchar_color_arg = Color(0.5, 0.5, 0.5, 1);
-  Vector3 translate_val = Vector3(0, 0, 0);
-
-  if (mnchar_id_arg == "0")
-  {mnchar_color_arg = Color(1.0, 0.0, 0.0, 1);
-  translate_val = Vector3(20, 0, -20);}
-
-  else if (mnchar_id_arg == "1")
-  {mnchar_color_arg = Color(0.0, 1.0, 0.0, 1);
-  translate_val = Vector3(-20, 0, -20);}
-
   set_character_color(mnchar_color_arg);
 
   // Moving the Mnchar to its starting point:
-  translate(translate_val);
+  translate(mnchar_translate_arg);
 
   // Note: I had originally tried this code:
   // get_node<Node3D>("Pivot") -> translate(translate_val);
