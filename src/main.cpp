@@ -36,7 +36,27 @@ Main::~Main() {}
 
 
 void Main::end_game(String winning_mnchar_id) {
-UtilityFunctions::print("The winning player is:", winning_mnchar_id);
+// At this point, we'll want to clear out all remaining players
+// (though only one should be present); inform the players who won;
+// and then set the Hud's can_launch_new_game boolean to true
+// so that players can launch a new game if desired.
+get_tree()->call_group("mnchars", "queue_free"); // This code, 
+// based on the game_over() function within
+// https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.cpp ,
+// requires that you create a 'mnchars' group within the editor
+// so that it can be referenced by this function. See
+// the 'Removing old creeps' section of 
+// https://docs.godotengine.org/en/4.5/getting_started/first_2d_game/06.heads_up_display.html
+// for more details.
+
+// Specifying which player won: (winner_message starts out as blank.
+// The double line breaks at the end will help distinguish the winner
+// from the instructions.
+get_node<Hud>("Hud")->winner_message = "The winning player is: "+winning_mnchar_id + "\n\n";
+get_node<Hud>("Hud")->message_time = 0; // Restarting the message
+// timer that will get utilized within Hud's _process() function
+get_node<Hud>("Hud")->can_launch_new_game = true;
+
 
 }
 

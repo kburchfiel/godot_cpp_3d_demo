@@ -16,7 +16,7 @@ material = SubResource("StandardMaterial3D_1ngy0")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ygbm5"]
 
-[node name="Mnchar" type="Mnchar" unique_id=1052373598]
+[node name="Mnchar" type="Mnchar" unique_id=1052373598 groups=["mnchars"]]
 packed_scene = ExtResource("1_0j8lf")
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1, 0)
 

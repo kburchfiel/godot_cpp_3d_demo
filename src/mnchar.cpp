@@ -383,3 +383,4 @@ void Mnchar::_physics_process(double delta) {
 
   move_and_slide();
 }
+

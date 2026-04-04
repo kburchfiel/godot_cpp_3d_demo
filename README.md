@@ -157,16 +157,19 @@ I still need to add in player inputs, colors, and start locations to accommodate
 
 I then added in two TypedDictionaries within main.h, one for player colors and one for starting locations, that my main.cpp code could use to determine which starting locations and values to assign to each player. I'll need to modify these starting locations to make them more even, however; in addition, I'll need to add in code that rotates each player towards the center. (All are currently facing away from the camera, which isn't ideal for 3 out of the 4 sides of the game area.)
 
+## Part 10: Determining a winner
+
+In order to figure out who (if any) won the game, I first needed to create a set that would store all active Mnchar IDs. Next, I updated my mnchar.cpp code such that each Mnchar would emit a signal after being hit. By connecting this signal to my main.cpp code, I could remove Mnchars from the active-Mnchar set upon being hit. (This also required that I connect the Mnchar's signal to a function within main.cpp within my main.cpp code, since a Mnchar is not part of my Main.tscn scene.)
+
+I then added in code that would send game-over information to my Hud scene once this set contained fewer than 2 characters. As part of this update, I also allowed the player-selection menu to return once a given game was complete.
 
 ## Next steps (an incomplete list!)
 
 1. Update your projectile.cpp code such that their colors match those of the Mnchar objects firing them. (You'll probably need to make these projectiles' material and mesh items local to scene within the editor; see Mnchar::set_character_color for more details.)
 
-1. Update your starting locations and rotate players as needed.
+1. Rotate players as needed so that they're facing the center of the game upon initialization.
 
 1. Add additional input_map settings that allow up to eight players to be supported.
-
-1. Try adding in code that determines who won the game (e.g. the last player(s) standing). You can do this by creating a vector of player IDs, then removing IDs from the vector once they've been hit. (This will involve updating your collision function to emit a signal with the player's ID that the HUD or Main code (whichever one will store this vector) can then receive. Once fewer than two IDs are left, you can then check whether only one ID is left; if so, announce it as the winner, then change Hud.can_launch_new_game back to True so that a new game can begin. (If no IDs are left, this means that two players were hit simultaneously--so you can declare in that case that there were no winners.)
 
 1. Also add in a dictionary that can store how many hits each player scored. This will involve linking each projectile to its firer's mnchar_id, then sending that mnchar_id to another function (via a signal) that will update a hits dictionary accordingly.
 

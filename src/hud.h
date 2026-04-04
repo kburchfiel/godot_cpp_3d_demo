@@ -20,8 +20,12 @@ private:
 
 public:
     int players_to_include = 2;
+    bool can_launch_new_game = true;
+    double message_time = 0;
+    bool announce_winner = false;
     Hud();
     ~Hud() = default;
+    String winner_message {""};
     void show_message(String text);
     void _process(double delta) override;
     // Note: A compiler error helped me recognize that, unless

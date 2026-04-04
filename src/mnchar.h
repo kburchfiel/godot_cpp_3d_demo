@@ -86,8 +86,8 @@ public:
   // . I also found a body_entered reference with a Node3D type at
   // godot-cpp/gdextension/extension_api-4-5.json .
 
-  void
-  start(String mnchar_id_arg, Color mnchar_color_arg, 
+
+  void  start(String mnchar_id_arg, Color mnchar_color_arg, 
     Vector3 mnchar_translate_arg); // Defining a function that will run right when
                                  // a Mnchar object appears. See
   // https://gamedev.stackexchange.com/questions/207050/what-is-the-difference-between-onready-and-ready
