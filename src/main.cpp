@@ -6,6 +6,7 @@
 #include "mnchar.h"
 #include "hud.h"
 #include <godot_cpp/classes/scene_tree.hpp>
+#include <godot_cpp/variant/signal.hpp>
 
 void Main::_bind_methods() {
 
@@ -14,6 +15,10 @@ void Main::_bind_methods() {
                        &Main::set_mnchar_scene);
   ClassDB::bind_method(D_METHOD("_on_hud_start_game"),
                        &Main::_on_hud_start_game);
+  
+  ClassDB::bind_method(D_METHOD(
+  "_on_mnchar_mnchar_hit", "hit_mnchar_id_arg"), &Main::_on_mnchar_mnchar_hit);
+
   ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "packed_scene",
                             PROPERTY_HINT_RESOURCE_TYPE, "PackedScene"),
                "set_mnchar_scene", "get_mnchar_scene");
@@ -29,12 +34,63 @@ Main::Main() {}
 
 Main::~Main() {}
 
+
+void Main::end_game(String winning_mnchar_id) {
+UtilityFunctions::print("The winning player is:", winning_mnchar_id);
+
+}
+
+
+// Don't forget to preface the function definitions in this file 
+// with Main:: !
+void Main::_on_mnchar_mnchar_hit(String hit_mnchar_id_arg) {
+  UtilityFunctions::print(
+"Mnchar with an ID of", hit_mnchar_id_arg, "was just hit.");
+active_players.erase(hit_mnchar_id_arg);
+UtilityFunctions::print("Current size of active_players:", active_players.size());
+
+if (active_players.size() == 1)
+
+{
+// Checking to see who won: (We'll do so by iterating through all
+// 8 player IDs).
+for (int i = 0; i < 8; i++) 
+{String mnchar_to_look_up = String::num(i).substr(0, 1);
+UtilityFunctions::print(i);
+// Checking whether the output of find() matches that of (end). If 
+// it *doesn't*, we can conclude that this element is present 
+// within the vector, and thus the winner.
+// Based on:
+// https://www.geeksforgeeks.org/cpp/how-to-check-if-set-contains-an-element-in-cpp/
+if (active_players.find(mnchar_to_look_up) != active_players.end())
+
+{end_game (mnchar_to_look_up);
+break;}
+
+}
+
+if (active_players.size() == 0) // In this case, no one won the game.
+{
+end_game("Nobody"); // 
+}
+
+}
+
+}
+
 void Main::_ready() {
 
 }
 
+
+
+
 void Main:: _on_hud_start_game(int players_to_include)
 {
+
+// Resetting our set of active players:
+active_players.clear();
+
   // Determining how many players to add:
   // (Note: This could probably also be retrieved by emitting
   // a player-count argument along with the "start_game" signal.)
@@ -57,17 +113,56 @@ argument from the signal: ", players_to_include);
   Color mnchar_color_arg = mnchar_id_color_dict[mnchar_id_arg];
   Vector3 mnchar_translate_arg = mnchar_id_location_dict[mnchar_id_arg];
 
-
-  // At least two players will always be added.
+  // Adding a new mnchar to the scene:
   auto new_mnchar = reinterpret_cast<Mnchar *>(
   get_mnchar_scene()->instantiate());
+
+
+
+// Connecting this mnchar's "mnchar_hit" signal to Main: 
+// on_mnchar_mnchar_hit():
+// (I couldn't do this within the editor, since at the outset of 
+// the game, a Mnchar is not present within the scene tree. Therefore,
+// I used this alternative approach (which also has the benefit
+// of not requiring any editor-specific updates.)
+// https://docs.godotengine.org/en/4.6/tutorials/scripting/cpp/gdextension_cpp_example.html#signals
+
+  new_mnchar->connect("mnchar_hit", Callable(this, "_on_mnchar_mnchar_hit"));
+
+  // Note that it doesn't seem necessary to mention 
+  // the mnchar_id property of mnchar_hit within this code, as it 
+  // will still get picked up by the _on_mnchar_mnchar_hit function
+  // specified within Callable.
+
+
 
   new_mnchar->start(mnchar_id_arg, mnchar_color_arg, 
   mnchar_translate_arg);
   add_child(new_mnchar);
 
 
+  // Adding this player to our set of active players:
+
+  active_players.insert(mnchar_id_arg);
+
+  
+
 }
+
+UtilityFunctions::print("Current contents of active_players:");
+
+for (int i = 0; i < 8; i++)
+{String mnchar_to_look_up = String::num(i).substr(0, 1);
+UtilityFunctions::print(i);
+// Checking whether the output of find() matches that of (end). If 
+// it *doesn't*, we can conclude that this element is present 
+// within the vector.
+// Based on:
+// https://www.geeksforgeeks.org/cpp/how-to-check-if-set-contains-an-element-in-cpp/
+UtilityFunctions::print(active_players.find(mnchar_to_look_up) != active_players.end());
+}
+
+
 
 
 

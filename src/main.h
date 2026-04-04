@@ -8,6 +8,7 @@
 #include <godot_cpp/classes/packed_scene.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/variant/typed_dictionary.hpp>
+#include <godot_cpp/templates/hash_set.hpp>
 
 using namespace godot;
 
@@ -31,16 +32,25 @@ public:
 
   void _on_hud_start_game(int players_to_include);
 
+  void _on_mnchar_mnchar_hit(String hit_mnchar_id_arg);
+
+  void end_game(String winning_mnchar_id);
+
+
+// The following TypedDictionary code was based on
+// https://docs.godotengine.org/en/stable/engine_details/architecture/core_types.html ,  
+// https://github.com/godotengine/godot-cpp/blob/master/test/src/example.cpp ,
+// and my understanding of std::map initialization options.
 
   TypedDictionary<String, Vector3> mnchar_id_location_dict {
-{String("0"), Vector3(-15, 0, -20)},
-{String("1"), Vector3(15, 0, -20)},
-{String("2"), Vector3(-10, 0, 20)},
-{String("3"), Vector3(10, 0, -20)},
-{String("4"), Vector3(-20, 0, -10)},
-{String("5"), Vector3(20, 0, 10)},
-{String("6"), Vector3(-20, 0, 15)},
-{String("7"), Vector3(20, 0, -15)}
+{String("0"), Vector3(15, 0, -20)},
+{String("1"), Vector3(-15, 0, 20)},
+{String("2"), Vector3(-20, 0, -15)},
+{String("3"), Vector3(20, 0, 15)},
+{String("4"), Vector3(-5, 0, -20)},
+{String("5"), Vector3(5, 0, 20)},
+{String("6"), Vector3(-20, 0, 5)},
+{String("7"), Vector3(20, 0, -5)}
 };
 
 // To do: Add in an ID-rotation dict so that players are all facing
@@ -79,7 +89,23 @@ public:
 
 // }
 
-// (This code was based on:
-// https://github.com/godotengine/godot-cpp/blob/master/test/src/example.cpp )
+// The following HashSet will keep a list of active players.
+// Once the size of this set becomes less than two, we can
+// determine which player (if any) won the game.
+// (If two players hit each other at exactly the same time,
+// the length of this set will become 0, and no winner will be
+// declared.)
+
+// See https://docs.godotengine.org/en/stable/engine_details/architecture/core_types.html ,
+// and https://github.com/godotengine/godot/blob/master/core/templates/hash_set.h ,
+// and godot-cpp/include/godot_cpp/templates/hash_set.hpp 
+
+HashSet<String> active_players {};
+
+
+// Creating another TypedDictionary that will keep track of how many
+// hits each player has achieved so far:
+TypedDictionary<String, int> hits_achieved {};
+
 
 };

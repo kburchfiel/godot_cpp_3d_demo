@@ -41,6 +41,10 @@ void Mnchar::_bind_methods() {
                        &Mnchar::set_mnchar_id);
   ADD_PROPERTY(PropertyInfo(Variant::STRING, "mnchar_id"), "set_mnchar_id",
                "get_mnchar_id");
+// The following call is based on similar code within hud.cpp.
+ADD_SIGNAL(MethodInfo("mnchar_hit", PropertyInfo(
+Variant::STRING, "mnchar_id")));
+
 
   // Adding in code to retrieve our projectile scene so that the player can fire
   // bullets: (This code was based on
@@ -236,6 +240,7 @@ void Mnchar::shoot_projectile()
 void Mnchar::_on_projectile_detector_body_entered(Node3D *node) {
   UtilityFunctions::print(
       "on_body_entered() just got called within mnchar.cpp.");
+emit_signal("mnchar_hit", mnchar_id);
   queue_free(); // This function is based on
   // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/mob.cpp
   // and
@@ -246,6 +251,7 @@ void Mnchar::_on_projectile_detector_body_entered(Node3D *node) {
   // projectiles, but *not* the ground or the player itself,
   // you'll need to update the layer and mask items within
   // the editor. See README for more details.
+
 }
 
 void Mnchar::_physics_process(double delta) {
