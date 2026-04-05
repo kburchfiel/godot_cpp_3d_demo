@@ -43,7 +43,8 @@ void Mnchar::_bind_methods() {
                "get_mnchar_id");
 // The following call is based on similar code within hud.cpp.
 ADD_SIGNAL(MethodInfo("mnchar_hit", PropertyInfo(
-Variant::STRING, "mnchar_id")));
+Variant::STRING, "mnchar_id"), PropertyInfo(
+Variant::STRING, "firing_mnchar_id")));
 
 
   // Adding in code to retrieve our projectile scene so that the player can fire
@@ -224,7 +225,7 @@ void Mnchar::shoot_projectile()
   // we want to move the projectile in front of the Mnchar's field
   // of view rather than the game area itself.
 
-  projectile->start(projectile_transform);
+  projectile->start(projectile_transform, mnchar_id);
   // Based on:
   // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.cpp
 
@@ -240,7 +241,21 @@ void Mnchar::shoot_projectile()
 void Mnchar::_on_projectile_detector_body_entered(Node3D *node) {
   UtilityFunctions::print(
       "on_body_entered() just got called within mnchar.cpp.");
-emit_signal("mnchar_hit", mnchar_id);
+
+// Converting this node to a Projectile so that we can access
+// the ID of its firing player:
+
+Projectile* node_as_projectile =
+      Object::cast_to<Projectile>(node);
+
+String firing_mnchar_id = node_as_projectile->get_firing_mnchar_id();
+
+// UtilityFunctions::print("node's firing_mnchar_id:", 
+//   node_as_projectile->get_firing_mnchar_id());
+
+emit_signal("mnchar_hit", mnchar_id, firing_mnchar_id);
+
+
   queue_free(); // This function is based on
   // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/mob.cpp
   // and

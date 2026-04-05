@@ -20,6 +20,11 @@ private:
 	// https://docs.godotengine.org/en/stable/tutorials/scripting/idle_and_physics_processing.html
 
 
+// The following string will let us determine which Mnchar
+// fired a projectile--and, thus, which Mnchar should be credited for
+// a hit on another Mnchar.
+String firing_mnchar_id = "";
+
 
 protected:
 	static void _bind_methods();
@@ -33,7 +38,11 @@ public:
 
 	void set_projectile_speed(const double movement_speed);
 	double get_projectile_speed() const;
-	void start(Transform3D transform);
+
+	void set_firing_mnchar_id(const String firing_mnchar_id_arg);
+	String get_firing_mnchar_id() const;
+
+	void start(Transform3D transform, String firing_mnchar_id);
 	void _physics_process(double delta) override;
 
 };

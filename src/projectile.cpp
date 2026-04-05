@@ -29,6 +29,14 @@ void Projectile::set_projectile_speed(const double p_projectile_speed) {
 
 double Projectile::get_projectile_speed() const { return projectile_speed; }
 
+void Projectile::set_firing_mnchar_id(
+  const String firing_mnchar_id_arg) {
+  firing_mnchar_id = firing_mnchar_id_arg;
+}
+
+String Projectile::get_firing_mnchar_id() const { return firing_mnchar_id; }
+
+
 // The following function is based mostly on:
 // https://docs.godotengine.org/en/stable/tutorials/physics/using_character_body_2d.html ,
 // https://docs.godotengine.org/en/stable/tutorials/3d/using_transforms.html#obtaining-information,
@@ -47,10 +55,9 @@ double Projectile::get_projectile_speed() const { return projectile_speed; }
 // This C++ projectile code (though it's for a 2D game) could also help:
 // https://github.com/vorlac/godot-roguelite/blob/main/src/entity/projectile/projectile.cpp
 
-void Projectile::start(Transform3D transform) {
+void Projectile::start(Transform3D transform, String firing_mnchar_id) {
 
-  // shoot_origin and shoot_dir derive from 
-  // the player.gd code in the above link .
+  
   //UtilityFunctions::print("start() just got called for a projectile.");
 
 
@@ -59,7 +66,7 @@ void Projectile::start(Transform3D transform) {
   // set_transform derives from 
   // godot-cpp/gen/src/classes/node3d.cpp (which I may have come
   // across while doing a content search for 'transform').
-  Projectile::set_transform(transform);
+  set_transform(transform);
   
   // UtilityFunctions::print("transform is now: ", transform);
 
@@ -99,6 +106,9 @@ void Projectile::start(Transform3D transform) {
     // "column 2 of the matrix.")
     // I had also tried to use get_transform()::get_basis(), but that
     // didn't work correctly.
+
+
+    Projectile::set_firing_mnchar_id(firing_mnchar_id);
 
 }
 

@@ -32,9 +32,12 @@ public:
 
   void _on_hud_start_game(int players_to_include);
 
-  void _on_mnchar_mnchar_hit(String hit_mnchar_id_arg);
+  void _on_mnchar_mnchar_hit(String hit_mnchar_id_arg, 
+  String firing_mnchar_id_arg);
 
   void end_game(String winning_mnchar_id);
+
+  int number_of_players = 0;
 
 
 // The following TypedDictionary code was based on

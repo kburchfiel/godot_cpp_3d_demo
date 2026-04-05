@@ -52,7 +52,29 @@ get_tree()->call_group("mnchars", "queue_free"); // This code,
 // Specifying which player won: (winner_message starts out as blank.
 // The double line breaks at the end will help distinguish the winner
 // from the instructions.
-get_node<Hud>("Hud")->winner_message = "The winning player is: "+winning_mnchar_id + "\n\n";
+
+String new_winner_message = "The winning player is: "+winning_mnchar_id + "\n\n";
+
+
+// Reporting how many hits each player scored received:
+
+  for (int i = 0; i < number_of_players; i++)
+  // Remember that valid player IDs will range from 0 to 7--so,
+// for a 2-player game, we'll want i to iterate from 0 to 1 
+// (inclusive).
+{String mnchar_id_arg = String::num(i).substr(0, 1);
+new_winner_message += "Player " + mnchar_id_arg 
++ " scored " + String::num(hits_achieved[mnchar_id_arg]) 
++ " hits.\n";
+}
+
+// Creating some space between this message and information
+// that will follow:
+new_winner_message += "\n\n";
+
+
+
+get_node<Hud>("Hud")->winner_message = new_winner_message;
 get_node<Hud>("Hud")->message_time = 0; // Restarting the message
 // timer that will get utilized within Hud's _process() function
 get_node<Hud>("Hud")->can_launch_new_game = true;
@@ -63,11 +85,18 @@ get_node<Hud>("Hud")->can_launch_new_game = true;
 
 // Don't forget to preface the function definitions in this file 
 // with Main:: !
-void Main::_on_mnchar_mnchar_hit(String hit_mnchar_id_arg) {
+void Main::_on_mnchar_mnchar_hit(String hit_mnchar_id_arg,
+String firing_mnchar_id_arg) {
   UtilityFunctions::print(
-"Mnchar with an ID of", hit_mnchar_id_arg, "was just hit.");
+"Mnchar with an ID of ", hit_mnchar_id_arg, "was just hit by Mnchar \
+with an ID of ", firing_mnchar_id_arg);
 active_players.erase(hit_mnchar_id_arg);
 UtilityFunctions::print("Current size of active_players:", active_players.size());
+
+// Registering this hit within our hits_achieved dictionary:
+int current_hit_value = hits_achieved[firing_mnchar_id_arg];
+current_hit_value += 1;
+hits_achieved[firing_mnchar_id_arg] = current_hit_value;
 
 if (active_players.size() == 1)
 
@@ -108,8 +137,16 @@ void Main::_ready() {
 void Main:: _on_hud_start_game(int players_to_include)
 {
 
+number_of_players = players_to_include; // number_of_players
+// will be useful for iterating through dictionaries that contain
+// player information
+
 // Resetting our set of active players:
 active_players.clear();
+
+// Resetting our hits dictionary also: (This may be necessary
+// if a new game includes fewer players than a previous game)
+hits_achieved = TypedDictionary<String, int>{};
 
   // Determining how many players to add:
   // (Note: This could probably also be retrieved by emitting
@@ -150,9 +187,9 @@ argument from the signal: ", players_to_include);
   new_mnchar->connect("mnchar_hit", Callable(this, "_on_mnchar_mnchar_hit"));
 
   // Note that it doesn't seem necessary to mention 
-  // the mnchar_id property of mnchar_hit within this code, as it 
-  // will still get picked up by the _on_mnchar_mnchar_hit function
-  // specified within Callable.
+  // the mnchar_id or firing_mnchar_id propeorties of mnchar_hit 
+  // within this code, as it will still successfully get picked up by 
+  // the _on_mnchar_mnchar_hit function specified within Callable.
 
 
 
@@ -164,14 +201,17 @@ argument from the signal: ", players_to_include);
   // Adding this player to our set of active players:
 
   active_players.insert(mnchar_id_arg);
+  hits_achieved[mnchar_id_arg] = 0;
 
+  
   
 
 }
 
 UtilityFunctions::print("Current contents of active_players:");
 
-for (int i = 0; i < 8; i++)
+for (int i = 0; i < 8; i++) // For many use cases, you could limit
+// i to active_players.size()
 {String mnchar_to_look_up = String::num(i).substr(0, 1);
 UtilityFunctions::print(i);
 // Checking whether the output of find() matches that of (end). If 
