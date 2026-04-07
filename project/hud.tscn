@@ -5,3 +5,15 @@
 [node name="Message" type="Label" parent="." unique_id=1662724339]
 offset_right = 40.0
 offset_bottom = 23.0
+text = "Press Fire to launch a 2-player game.
+Press left and right on Player 0's control stick
+to increase and decrease the player count, respectively."
+
+[node name="ConstantMessage" type="Label" parent="." unique_id=1193307866]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -20.0
+offset_right = -19.0
+offset_bottom = 23.0
+grow_horizontal = 0

@@ -57,7 +57,9 @@ String new_winner_message = "The winning player is: "+winning_mnchar_id + "\n\n"
 
 
 // Reporting how many hits each player scored received:
-
+// (We could also iterate through the dictionary's keys here;
+// see update_constant_message() for an example of how 
+// to do so.)
   for (int i = 0; i < number_of_players; i++)
   // Remember that valid player IDs will range from 0 to 7--so,
 // for a 2-player game, we'll want i to iterate from 0 to 1 
@@ -98,22 +100,54 @@ int current_hit_value = hits_achieved[firing_mnchar_id_arg];
 current_hit_value += 1;
 hits_achieved[firing_mnchar_id_arg] = current_hit_value;
 
+// Updating overall_hits_achieved as well:
+int current_overall_hit_value = overall_hits_achieved[
+firing_mnchar_id_arg];
+current_overall_hit_value += 1;
+overall_hits_achieved[firing_mnchar_id_arg] = current_overall_hit_value;
+
+// UtilityFunctions::print("Relevant key and value:", 
+//   firing_mnchar_id_arg, overall_hits_achieved[firing_mnchar_id_arg]);
+
+// Updating our overall stats to reflect this new hit:
+update_constant_message();
+
 if (active_players.size() == 1)
 
 {
 // Checking to see who won: (We'll do so by iterating through all
-// 8 player IDs).
+// 8 possible player IDs. There's most likely a simpler way to
+// implement this task.
 for (int i = 0; i < 8; i++) 
 {String mnchar_to_look_up = String::num(i).substr(0, 1);
 UtilityFunctions::print(i);
 // Checking whether the output of find() matches that of (end). If 
 // it *doesn't*, we can conclude that this element is present 
 // within the vector, and thus the winner.
-// Based on:
-// https://www.geeksforgeeks.org/cpp/how-to-check-if-set-contains-an-element-in-cpp/
-if (active_players.find(mnchar_to_look_up) != active_players.end())
+// (I had learned about the has() function for arrays,
+// but was pleased to find out that it's also available for
+// sets. See
+// godot-cpp/include/godot_cpp/templates/hash_set.hpp )
 
-{end_game (mnchar_to_look_up);
+if (active_players.has(mnchar_to_look_up))
+
+
+// Alternative approach, based on 
+// https://www.geeksforgeeks.org/cpp/how-to-check-if-set-contains-an-element-in-cpp/ :
+// if (active_players.find(mnchar_to_look_up) != active_players.end())
+
+
+{
+  int current_overall_win_value = overall_wins[
+mnchar_to_look_up];
+current_overall_win_value += 1;
+overall_wins[mnchar_to_look_up] = current_overall_win_value;
+
+// Updating our overall stats to reflect this new hit:
+update_constant_message();
+  
+  
+  end_game (mnchar_to_look_up);
 break;}
 
 }
@@ -133,9 +167,79 @@ void Main::_ready() {
 
 
 
+void Main::update_constant_message()
+/* This function prints out the contents of two dictionaries--one
+containing players' overall (i.e. game-to-game) hit counts,
+and another containing their overall wins. It should be called 
+whenever one of these two dictionaries is changed.
+*/
+{
+UtilityFunctions::print("Callling update_constant_message.");
+
+// We could also add information about hits for the current game
+// (see below), but since these will already get shared
+// within the end-of-game text, I commented out this section.
+
+// String constant_message_text = "Current-game hits:\n";
+
+// Array hits_achieved_keys = hits_achieved.keys();
+
+// // for (int array_index = 0; array_index < hits_achieved_keys.size(); array_index ++)
+// // UtilityFunctions::print("Value with an array index of ", 
+// // array_index, "is:", hits_achieved_keys[array_index]);
+
+// for (int key_index = 0; 
+// key_index < hits_achieved_keys.size(); key_index++)
+
+// {constant_message_text += "Player "+ String(
+// hits_achieved_keys[key_index]) + ": " +
+// String::num(hits_achieved[hits_achieved_keys[key_index]]) + "\n";}
+
+
+String constant_message_text = "Overall hits:\n";
+
+// Iterating through a TypedDictionary by
+// accessing its keys, then printing out each key
+// and its corresponding value pair:
+// Based on the answer by svrcrz at
+// https://godotforums.org/d/33822-how-to-loop-a-dictionary-in-godot-c-gdextension/3
+
+Array overall_hits_achieved_keys = overall_hits_achieved.keys();
+
+// for (int array_index = 0; array_index < overall_hits_achieved_keys.size(); array_index ++)
+// UtilityFunctions::print("Value with an array index of ", 
+// array_index, "is:", overall_hits_achieved_keys[array_index]);
+
+
+for (int key_index = 0; 
+key_index < overall_hits_achieved_keys.size(); key_index++)
+
+{constant_message_text += "Player "+ String(
+overall_hits_achieved_keys[key_index]) + ": " +
+String::num(overall_hits_achieved[overall_hits_achieved_keys[key_index]]) + "\n";}
+
+Array overall_wins_keys = overall_wins.keys();
+
+constant_message_text += "\nOverall wins:\n";
+
+for (int key_index = 0; 
+key_index < overall_wins_keys.size(); key_index++)
+
+{constant_message_text+=
+"Player "+ String(overall_wins_keys[key_index]) + ": " +
+String::num(overall_wins[overall_wins_keys[key_index]]) + "\n";}
+
+// Updating the ConstantMessage label within our Hud class to
+// feature this new message:
+
+get_node<Hud>("Hud")->show_constant_message(constant_message_text);
+
+}
+
 
 void Main:: _on_hud_start_game(int players_to_include)
 {
+
 
 number_of_players = players_to_include; // number_of_players
 // will be useful for iterating through dictionaries that contain
@@ -147,6 +251,8 @@ active_players.clear();
 // Resetting our hits dictionary also: (This may be necessary
 // if a new game includes fewer players than a previous game)
 hits_achieved = TypedDictionary<String, int>{};
+
+
 
   // Determining how many players to add:
   // (Note: This could probably also be retrieved by emitting
@@ -176,7 +282,7 @@ argument from the signal: ", players_to_include);
 
 
 
-// Connecting this mnchar's "mnchar_hit" signal to Main: 
+// Connecting this Mnchar instance's "mnchar_hit" signal to Main: 
 // on_mnchar_mnchar_hit():
 // (I couldn't do this within the editor, since at the outset of 
 // the game, a Mnchar is not present within the scene tree. Therefore,
@@ -203,6 +309,22 @@ argument from the signal: ", players_to_include);
   active_players.insert(mnchar_id_arg);
   hits_achieved[mnchar_id_arg] = 0;
 
+  // Checking to see whether this Mnchar ID is present within 
+  // our dictionaries of overall hits and wins. If it's not,
+  // we'll add it to that dictionary, then make 0 its starting
+  // value.
+
+
+    if (overall_hits_achieved.has(mnchar_id_arg) == false)
+  // Alternative option:
+  // if (overall_hits_achieved_keys.has(mnchar_id_arg) == false)
+  // Based on https://docs.godotengine.org/en/stable/classes/class_array.html#class-array-method-find
+  {  overall_hits_achieved[mnchar_id_arg] = 0;}
+
+    if (overall_wins.has(mnchar_id_arg) == false)
+  {  overall_wins[mnchar_id_arg] = 0;}
+
+
   
   
 
@@ -219,34 +341,15 @@ UtilityFunctions::print(i);
 // within the vector.
 // Based on:
 // https://www.geeksforgeeks.org/cpp/how-to-check-if-set-contains-an-element-in-cpp/
-UtilityFunctions::print(active_players.find(mnchar_to_look_up) != active_players.end());
+// UtilityFunctions::print(active_players.find(mnchar_to_look_up) != active_players.end());
+
+// Simpler approach:
+UtilityFunctions::print(active_players.has(mnchar_to_look_up));
 }
 
+update_constant_message();
 
 
-
-
-  // auto mnchar_1 = reinterpret_cast<Mnchar *>(mnchar_scene->instantiate());
-  // mnchar_1->start("1");
-
-  // add_child(mnchar_1);
-
-  
-  // auto mnchar_1 = reinterpret_cast<Mnchar *>(mnchar_scene->instantiate());
-  // mnchar_1->start("1");
-
-  // add_child(mnchar_1);
-
-  //   auto mnchar_1 = reinterpret_cast<Mnchar *>(mnchar_scene->instantiate());
-  // mnchar_1->start("1");
-
-  // add_child(mnchar_1);
-
-//   UtilityFunctions::print("At the end of Main::_ready, \
-// the mnchar_id values of mnchar_0 and mnchar_1 are \
-// ",
-//                           mnchar_0->get_mnchar_id(), " and ",
-//                           mnchar_1->get_mnchar_id());
 }
 
 

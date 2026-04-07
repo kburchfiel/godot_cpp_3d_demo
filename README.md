@@ -163,6 +163,12 @@ In order to figure out who (if any) won the game, I first needed to create a set
 
 I then added in code that would send game-over information to my Hud scene once this set contained fewer than 2 characters. As part of this update, I also allowed the player-selection menu to return once a given game was complete.
 
+# Part 11: Sharing last-game and overall stats
+I also wanted the game to show information about how many hits each player had scored within the most recent game--along with how many hits (and wins) each player had achieved across rounds. In order to implement these updates, I first allowed information about the firing Mnchar's ID to get stored within each projectile. Next, I updated my `Mnchar::_on_projectile_detector_body_entered` command so that it could extract these firing-Mnchar IDs, then send them over to main.cpp's `on_mnchar_mnchar_hit()` function.
+
+I then added dictionaries that could store current-game hit counts for each player as well as overall hit and win counts. Additional code updates allowed these dictionaries' data to get updated whenever a player got hit or a game ended. Next, I updated my end-of-game code to output the contents of the current-game-hits dictionary along with the winner. I also created a function (`Main::update_constant_message()`) that would convert the information in my overall hits and wins dictionaries into a string, then display that string within a new Label child of my Hud class.
+
+
 ## Next steps (an incomplete list!)
 
 1. Update your projectile.cpp code such that their colors match those of the Mnchar objects firing them. (You'll probably need to make these projectiles' material and mesh items local to scene within the editor; see Mnchar::set_character_color for more details.)
@@ -171,7 +177,9 @@ I then added in code that would send game-over information to my Hud scene once 
 
 1. Add additional input_map settings that allow up to eight players to be supported.
 
-1. Also add in a dictionary that can store how many hits each player scored. This will involve linking each projectile to its firer's mnchar_id, then sending that mnchar_id to another function (via a signal) that will update a hits dictionary accordingly.
+1. Test out the game with eight controllers to make sure everything's functioning correctly.
+
+1. Add boundaries (either visible or invisible) that prevent characters from leaving the game area.
 
 ## Troubleshooting notes
 

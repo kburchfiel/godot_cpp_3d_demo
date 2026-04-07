@@ -36,13 +36,19 @@ void Hud::show_message(String text) {
   message->show();
 }
 
-void Hud::_process(double delta) {
+void Hud::show_constant_message(String text) {
+  auto message = get_node<Label>("ConstantMessage");
+  message->set_text(text);
+  message->show();
+}
 
-// The following input-parsing code is based on mnchar.cpp.
+void Hud::_process(double delta) {
 
 if (can_launch_new_game == true) // We'll only want to enable
 // the following functionality if a game isn't aready in progress.
 {
+
+// The following input-parsing code is based on mnchar.cpp.
 
     message_time += delta;
 

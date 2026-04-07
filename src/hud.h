@@ -26,7 +26,9 @@ public:
     Hud();
     ~Hud() = default;
     String winner_message {""};
+    String constant_message {""};
     void show_message(String text);
+    void show_constant_message(String text);
     void _process(double delta) override;
     // Note: A compiler error helped me recognize that, unless
     // you include the double delta parameter,

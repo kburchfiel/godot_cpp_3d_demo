@@ -110,5 +110,13 @@ HashSet<String> active_players {};
 // hits each player has achieved so far:
 TypedDictionary<String, int> hits_achieved {};
 
+// Creating two additional dictionaries that will store total
+// hit and win counts across games:
+TypedDictionary<String, int> overall_hits_achieved {};
+
+
+TypedDictionary<String, int> overall_wins {};
+
+void update_constant_message();
 
 };

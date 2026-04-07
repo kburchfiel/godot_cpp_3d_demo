@@ -244,6 +244,11 @@ void Mnchar::_on_projectile_detector_body_entered(Node3D *node) {
 
 // Converting this node to a Projectile so that we can access
 // the ID of its firing player:
+// (This step would most likely fail if items other than projectiles
+// entered a projectile detector. However, I believe that correctly
+// setting my layer and mask options within the editor can help
+// ensure that only projectile entries will cause this function
+// to get called.)
 
 Projectile* node_as_projectile =
       Object::cast_to<Projectile>(node);
