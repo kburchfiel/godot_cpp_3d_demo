@@ -21,7 +21,8 @@ private:
 public:
     int players_to_include = 2;
     bool can_launch_new_game = true;
-    double message_time = 0;
+    double message_time = 0.0;
+    double reset_overall_stats_time = 0.0;
     bool announce_winner = false;
     Hud();
     ~Hud() = default;

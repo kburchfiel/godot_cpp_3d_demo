@@ -53,7 +53,12 @@ get_tree()->call_group("mnchars", "queue_free"); // This code,
 // The double line breaks at the end will help distinguish the winner
 // from the instructions.
 
-String new_winner_message = "The winning player is: "+winning_mnchar_id + "\n\n";
+// Note: explicitly converting the output of 
+// mnchar_id_color_name_dict[winning_mnchar_id] to a String
+// prevents a compiler error related to an ambiguous conversion. 
+String new_winner_message = "The winning player \
+is: "+winning_mnchar_id + " (" + 
+String(mnchar_id_color_name_dict[winning_mnchar_id]) + ")\n\n";
 
 
 // Reporting how many hits each player scored received:
@@ -64,9 +69,14 @@ String new_winner_message = "The winning player is: "+winning_mnchar_id + "\n\n"
   // Remember that valid player IDs will range from 0 to 7--so,
 // for a 2-player game, we'll want i to iterate from 0 to 1 
 // (inclusive).
-{String mnchar_id_arg = String::num(i).substr(0, 1);
-new_winner_message += "Player " + mnchar_id_arg 
-+ " scored " + String::num(hits_achieved[mnchar_id_arg]) 
+// String::num_int64 converts a string into an integer. Using
+// String::num will instead convert it into a float, which
+// is problematic for cases like the following in which 
+// the output must equal an integer. 
+{String mnchar_id_arg = String::num_int64(i);
+new_winner_message += "Player " + mnchar_id_arg + " (" + 
+String(mnchar_id_color_name_dict[mnchar_id_arg]) + ")"
++  " scored " + String::num_int64(hits_achieved[mnchar_id_arg]) 
 + " hits.\n";
 }
 
@@ -119,7 +129,7 @@ if (active_players.size() == 1)
 // 8 possible player IDs. There's most likely a simpler way to
 // implement this task.
 for (int i = 0; i < 8; i++) 
-{String mnchar_to_look_up = String::num(i).substr(0, 1);
+{String mnchar_to_look_up = String::num_int64(i);
 UtilityFunctions::print(i);
 // Checking whether the output of find() matches that of (end). If 
 // it *doesn't*, we can conclude that this element is present 
@@ -162,9 +172,26 @@ end_game("Nobody"); //
 }
 
 void Main::_ready() {
-
+// Connecting the HUD's overall-stats-reset signal to a corresponding
+// function within Main:
+// (This connection could also be done within the editor, but
+// I wanted to demonstrate that it's possible to do so via code
+// as well.)
+get_node<Hud>("Hud")->connect("reset_overall_stats", Callable(this, "_on_hud_reset_overall_stats"));
 }
 
+void Main::_on_hud_reset_overall_stats()
+// This function resets our overall-stats dictionaries (which can 
+// be helpful, for instance, following a practice run or some
+// other issue).
+{
+  overall_hits_achieved = TypedDictionary<String, int>{};
+  overall_wins = TypedDictionary<String, int>{};
+
+  // Replacing our existing overall-stats dictionaries with
+  // these new, blank ones:
+  update_constant_message();
+}
 
 
 void Main::update_constant_message()
@@ -174,7 +201,7 @@ and another containing their overall wins. It should be called
 whenever one of these two dictionaries is changed.
 */
 {
-UtilityFunctions::print("Callling update_constant_message.");
+UtilityFunctions::print("Calling update_constant_message.");
 
 // We could also add information about hits for the current game
 // (see below), but since these will already get shared
@@ -215,8 +242,11 @@ for (int key_index = 0;
 key_index < overall_hits_achieved_keys.size(); key_index++)
 
 {constant_message_text += "Player "+ String(
-overall_hits_achieved_keys[key_index]) + ": " +
-String::num(overall_hits_achieved[overall_hits_achieved_keys[key_index]]) + "\n";}
+overall_hits_achieved_keys[key_index]) + " (" + 
+String(mnchar_id_color_name_dict[String(
+overall_hits_achieved_keys[key_index])]) + "): " +
+String::num_int64(overall_hits_achieved[
+  overall_hits_achieved_keys[key_index]]) + "\n";}
 
 Array overall_wins_keys = overall_wins.keys();
 
@@ -226,8 +256,10 @@ for (int key_index = 0;
 key_index < overall_wins_keys.size(); key_index++)
 
 {constant_message_text+=
-"Player "+ String(overall_wins_keys[key_index]) + ": " +
-String::num(overall_wins[overall_wins_keys[key_index]]) + "\n";}
+"Player "+ String(overall_wins_keys[key_index]) + " (" + 
+String(mnchar_id_color_name_dict[String(
+overall_hits_achieved_keys[key_index])]) + "): " +
+String::num_int64(overall_wins[overall_wins_keys[key_index]]) + "\n";}
 
 // Updating the ConstantMessage label within our Hud class to
 // feature this new message:
@@ -267,9 +299,7 @@ argument from the signal: ", players_to_include);
   // Remember that valid player IDs will range from 0 to 7--so,
 // for a 2-player game, we'll want i to iterate from 0 to 1 
 // (inclusive).
-{String mnchar_id_arg = String::num(i).substr(0, 1);
-  // substr() should convert "3.0" to "3", which will be useful
-  // for accurately setting IDs.
+{String mnchar_id_arg = String::num_int64(i);
 
   // Determining the colors and translate values that correspond
   // to this ID:
@@ -334,7 +364,7 @@ UtilityFunctions::print("Current contents of active_players:");
 
 for (int i = 0; i < 8; i++) // For many use cases, you could limit
 // i to active_players.size()
-{String mnchar_to_look_up = String::num(i).substr(0, 1);
+{String mnchar_to_look_up = String::num_int64(i);
 UtilityFunctions::print(i);
 // Checking whether the output of find() matches that of (end). If 
 // it *doesn't*, we can conclude that this element is present 

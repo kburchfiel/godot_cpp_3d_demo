@@ -23,6 +23,8 @@ Hud::Hud() { reset = false; }
 void Hud::_bind_methods() {
 ADD_SIGNAL(MethodInfo("start_game", PropertyInfo(
 Variant::INT, "player_count")));
+
+ADD_SIGNAL(MethodInfo("reset_overall_stats"));
 // For string-based arguments, use VARIANT::STRING instead.
 // Note that PropertyInfo is included within the MethodInfo
 // parentheses.
@@ -60,6 +62,23 @@ if (can_launch_new_game == true) // We'll only want to enable
 
     else if (input->is_action_just_pressed("move_left_0"))
     {players_to_include = std::max(players_to_include -1, 2);}
+
+    if (input->is_action_pressed("reset_overall_stats_0"))
+    {reset_overall_stats_time += delta;}
+
+    else 
+    {reset_overall_stats_time = 0;}
+
+
+
+    if (reset_overall_stats_time >= 3)
+
+    {UtilityFunctions::print("reset-overall-stats request called.");
+    emit_signal("reset_overall_stats");
+        reset_overall_stats_time = 0;
+    }
+
+
 
     // An alternative setup would be to increment a separate variable
     // (int press_count) by 1 

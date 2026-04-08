@@ -32,6 +32,8 @@ public:
 
   void _on_hud_start_game(int players_to_include);
 
+  void _on_hud_reset_overall_stats();
+
   void _on_mnchar_mnchar_hit(String hit_mnchar_id_arg, 
   String firing_mnchar_id_arg);
 
@@ -91,6 +93,20 @@ public:
 // return id_location_tdict;
 
 // }
+
+// The following dictionary maps each ID to a name for its corresponding
+// color (defined within mnchar_id_color_dict). That will help
+// players understand which Mnchar a given player ID refers to.
+TypedDictionary<String, String> mnchar_id_color_name_dict {
+{String("0"), "Blue"},
+{String("1"), "Green"},
+{String("2"), "Cyan"},
+{String("3"), "Red"},
+{String("4"), "Magenta"},
+{String("5"), "Yellow"},
+{String("6"), "White"},
+{String("7"), "Black"}
+};
 
 // The following HashSet will keep a list of active players.
 // Once the size of this set becomes less than two, we can
