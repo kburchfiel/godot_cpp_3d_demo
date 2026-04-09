@@ -71,7 +71,7 @@ if (can_launch_new_game == true) // We'll only want to enable
 
 
 
-    if (reset_overall_stats_time >= 3)
+    if (reset_overall_stats_time >= 2)
 
     {UtilityFunctions::print("reset-overall-stats request called.");
     emit_signal("reset_overall_stats");

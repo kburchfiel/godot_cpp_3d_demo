@@ -172,14 +172,12 @@ I then added dictionaries that could store current-game hit counts for each play
 # Part 12: Adding a reset option and making other improvements
 Although it's handy to have a running tally of overall stats, I realized it would also be useful for players to be able to reset these stats. For instance, players may want to be able to play an initial practice round in which they can get used to the controls and identify their character, then reset their stats so that this round 'doesn't count.' 
 
-Therefore, I added in a new input (reset_overall_stats_0) that, when pressed continuously for three seconds, would replace the existing overall-stats dictionaries with empty ones. I plan to map this to the left trigger, since this button isn't currently used for any other purpose.
+Therefore, I added in a new input (reset_overall_stats_0) that, when pressed continuously for two seconds, would replace the existing overall-stats dictionaries with empty ones. I plan to map this to the left trigger, since this button isn't currently used for any other purpose.
 
 I also made several other improvements at this point. First, I added in a dictionary of color names (e.g. 'Blue', 'Green') that would allow players to identify the character corresponding to each ID. Second, I added in code that makes projectile colors equal to their firing characters' colors. Third, I added a dictionary of rotation values that allow all players to face towards the center of the screen.
 
 
 ## Next steps (an incomplete list!)
-
-1. Update your projectile.cpp code such that their colors match those of the Mnchar objects firing them. (You'll probably need to make these projectiles' material and mesh items local to scene within the editor; see Mnchar::set_character_color for more details.)
 
 1. Add additional input_map settings that allow up to eight players to be supported.
 
