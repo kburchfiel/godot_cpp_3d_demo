@@ -9,6 +9,8 @@
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/variant/typed_dictionary.hpp>
 #include <godot_cpp/templates/hash_set.hpp>
+#include <godot_cpp/core/math_defs.hpp>
+#include <cmath>
 
 using namespace godot;
 
@@ -58,9 +60,26 @@ public:
 {String("7"), Vector3(20, 0, -5)}
 };
 
-// To do: Add in an ID-rotation dict so that players are all facing
-// towards the center of the game area. Pass this rotation value
-// to Mnchar.cpp's start() function also.
+// The following dictionary specifies the starting rotation of 
+// each character. These rotations allow each character to face
+// towards the center of the game area. 
+// I initally multiplied each value by
+// the quotient of Math_PI (which I found in math_defs.hpp) and
+// 180 converts degree arguments into radians. However, I then
+// realized that it would be possible to simplify these entries
+// further.
+
+TypedDictionary<String, double> mnchar_id_rotation_dict {
+{String("0"), 0},
+{String("1"), Math_PI},
+{String("2"), Math_PI/2},
+{String("3"), Math_PI/-2},
+{String("4"), 0},
+{String("5"), Math_PI},
+{String("6"), Math_PI/2},
+{String("7"), Math_PI/-2},
+};
+
 
 // For the color dict, I simply treated colors as 3-bit binary
 // numbers, then incremented them up by one bit (except that 

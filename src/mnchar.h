@@ -88,7 +88,7 @@ public:
 
 
   void  start(String mnchar_id_arg, Color mnchar_color_arg, 
-    Vector3 mnchar_translate_arg); // Defining a function that will run right when
+    Vector3 mnchar_translate_arg, double mnchar_rotation_arg); // Defining a function that will run right when
                                  // a Mnchar object appears. See
   // https://gamedev.stackexchange.com/questions/207050/what-is-the-difference-between-onready-and-ready
 };

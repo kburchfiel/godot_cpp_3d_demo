@@ -42,7 +42,8 @@ public:
 	void set_firing_mnchar_id(const String firing_mnchar_id_arg);
 	String get_firing_mnchar_id() const;
 
-	void start(Transform3D transform, String firing_mnchar_id);
+	void start(Transform3D transform, String firing_mnchar_id,
+	Color projectile_color_arg);
 	void _physics_process(double delta) override;
 
 };

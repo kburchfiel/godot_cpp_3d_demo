@@ -163,17 +163,23 @@ In order to figure out who (if any) won the game, I first needed to create a set
 
 I then added in code that would send game-over information to my Hud scene once this set contained fewer than 2 characters. As part of this update, I also allowed the player-selection menu to return once a given game was complete.
 
-# Part 11: Sharing last-game and overall stats
+# Part 11: Sharing statistics for the most recent game and all games within the session thus far
 I also wanted the game to show information about how many hits each player had scored within the most recent game--along with how many hits (and wins) each player had achieved across rounds. In order to implement these updates, I first allowed information about the firing Mnchar's ID to get stored within each projectile. Next, I updated my `Mnchar::_on_projectile_detector_body_entered` command so that it could extract these firing-Mnchar IDs, then send them over to main.cpp's `on_mnchar_mnchar_hit()` function.
 
 I then added dictionaries that could store current-game hit counts for each player as well as overall hit and win counts. Additional code updates allowed these dictionaries' data to get updated whenever a player got hit or a game ended. Next, I updated my end-of-game code to output the contents of the current-game-hits dictionary along with the winner. I also created a function (`Main::update_constant_message()`) that would convert the information in my overall hits and wins dictionaries into a string, then display that string within a new Label child of my Hud class.
 
 
+# Part 12: Adding a reset option and making other improvements
+Although it's handy to have a running tally of overall stats, I realized it would also be useful for players to be able to reset these stats. For instance, players may want to be able to play an initial practice round in which they can get used to the controls and identify their character, then reset their stats so that this round 'doesn't count.' 
+
+Therefore, I added in a new input (reset_overall_stats_0) that, when pressed continuously for three seconds, would replace the existing overall-stats dictionaries with empty ones. I plan to map this to the left trigger, since this button isn't currently used for any other purpose.
+
+I also made several other improvements at this point. First, I added in a dictionary of color names (e.g. 'Blue', 'Green') that would allow players to identify the character corresponding to each ID. Second, I added in code that makes projectile colors equal to their firing characters' colors. Third, I added a dictionary of rotation values that allow all players to face towards the center of the screen.
+
+
 ## Next steps (an incomplete list!)
 
 1. Update your projectile.cpp code such that their colors match those of the Mnchar objects firing them. (You'll probably need to make these projectiles' material and mesh items local to scene within the editor; see Mnchar::set_character_color for more details.)
-
-1. Rotate players as needed so that they're facing the center of the game upon initialization.
 
 1. Add additional input_map settings that allow up to eight players to be supported.
 
@@ -230,7 +236,6 @@ Since YF3DG has GDScript and C# (but not C++) code excerpts, I first needed to d
     * godot-cpp/gen/src/classes/character_body3d.cpp
 
 Using these files, I was able to confirm that this class is also titled CharacterBody3D within the C++ API. I also confirmed that this class has the `move_and_slide()` function referenced within YF3DG. (A content search for `move_and_slide` would also have helped me locate the character_body3d.cpp file.)
-
 
 
 

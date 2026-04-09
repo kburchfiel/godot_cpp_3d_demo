@@ -14,10 +14,11 @@
 // Adding in utility functions for printing purposes. Based on:
 // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/player.cpp
 #include "projectile.h"
-#include <godot_cpp/classes/mesh_instance3d.hpp> // Necessary for us
 #include <godot_cpp/variant/utility_functions.hpp>
-// to access a MeshInstance3D within this script
+
+#include <godot_cpp/classes/mesh_instance3d.hpp> 
 #include <godot_cpp/classes/base_material3d.hpp>
+
 #include <godot_cpp/classes/shader_material.hpp>
 #include <godot_cpp/classes/standard_material3d.hpp>
 #include <godot_cpp/variant/typed_dictionary.hpp>
@@ -161,7 +162,7 @@ String Mnchar::get_mnchar_id() const { return mnchar_id; }
 // id_location_tdict[String("1")] = Vector3(-20, 0, -20);
 
 void Mnchar::start(String mnchar_id_arg, Color mnchar_color_arg,
-Vector3 mnchar_translate_arg) {
+Vector3 mnchar_translate_arg, double mnchar_rotation_arg) {
   // This function will specify the ID, 
   // color, and starting location for each Mnchar--thus making
   // it easier to differentiate each Mnchar instance
@@ -185,6 +186,10 @@ Vector3 mnchar_translate_arg) {
   // and hilarious haha)
 
   // UtilityFunctions::print("Done!");
+
+   get_node<Node3D>("Pivot")->rotate_object_local(
+      Vector3(0, 1, 0), mnchar_rotation_arg);
+
 }
 
 void Mnchar::shoot_projectile()
@@ -225,18 +230,37 @@ void Mnchar::shoot_projectile()
   // we want to move the projectile in front of the Mnchar's field
   // of view rather than the game area itself.
 
-  projectile->start(projectile_transform, mnchar_id);
+    auto mncharbody_mesh_material = get_node<Node3D>("Pivot")
+                                      ->get_node<MeshInstance3D>("MncharBody")
+                                      ->get_mesh()
+                                      ->surface_get_material(0);
+
+  BaseMaterial3D *mncharbody_mesh_material_3d =
+      Object::cast_to<BaseMaterial3D>(*mncharbody_mesh_material);
+
+
+  Color projectile_color_arg = mncharbody_mesh_material_3d->get_albedo();
+
+
+  projectile->start(projectile_transform, mnchar_id, projectile_color_arg);
   // Based on:
   // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.cpp
 
   // In order for our bullets to actually appear, we also need to
   // add them to our parent scene (e.g. main.tscn).
+
+  
+
+
   get_parent()->add_child(projectile);
   // See
   // https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-get-parent
   // and
   // https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-add-child
-}
+
+  
+  }
+
 
 void Mnchar::_on_projectile_detector_body_entered(Node3D *node) {
   UtilityFunctions::print(

@@ -5,6 +5,8 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/basis.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
+#include <godot_cpp/classes/mesh_instance3d.hpp> 
+#include <godot_cpp/classes/base_material3d.hpp>
 
 using namespace godot;
 
@@ -55,7 +57,8 @@ String Projectile::get_firing_mnchar_id() const { return firing_mnchar_id; }
 // This C++ projectile code (though it's for a 2D game) could also help:
 // https://github.com/vorlac/godot-roguelite/blob/main/src/entity/projectile/projectile.cpp
 
-void Projectile::start(Transform3D transform, String firing_mnchar_id) {
+void Projectile::start(Transform3D transform, String firing_mnchar_id,
+Color projectile_color_arg) {
 
   
   //UtilityFunctions::print("start() just got called for a projectile.");
@@ -109,6 +112,37 @@ void Projectile::start(Transform3D transform, String firing_mnchar_id) {
 
 
     Projectile::set_firing_mnchar_id(firing_mnchar_id);
+
+
+  // Changing the projectile's color (using code similar to that
+  // within mnchar.cpp):
+
+  auto projectile_mesh_material = get_node<Node3D>("Pivot")
+                                      ->get_node<MeshInstance3D>("ProjectileBody")
+                                      ->get_mesh()
+                                      ->surface_get_material(0);
+
+  BaseMaterial3D *projectile_mesh_material_3d =
+      Object::cast_to<BaseMaterial3D>(*projectile_mesh_material);
+
+  // Special thanks to RamblingStranger for pointing me to
+  // Object::cast_to as a means of converting an object into a
+  // new type. (See
+  // https://discordapp.com/channels/212250894228652034/342047011778068481/1487545947608322078)
+
+  projectile_mesh_material_3d->set_albedo(projectile_color_arg);
+
+  // Replacing the player's existing material with this new
+  // material:
+
+  auto new_projectile_mesh_material =
+      Object::cast_to<Material>(projectile_mesh_material_3d);
+
+  get_node<Node3D>("Pivot")
+      ->get_node<MeshInstance3D>("ProjectileBody")
+      ->get_mesh()
+      ->surface_set_material(0,
+                             new_projectile_mesh_material);
 
 }
 

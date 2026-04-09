@@ -16,8 +16,16 @@ void Main::_bind_methods() {
   ClassDB::bind_method(D_METHOD("_on_hud_start_game"),
                        &Main::_on_hud_start_game);
   
+
+// In order to successfully connect other nodes' signals to
+// functions within main.cpp, we need to make sure to bind the
+// relevant functions here.              
   ClassDB::bind_method(D_METHOD(
   "_on_mnchar_mnchar_hit", "hit_mnchar_id_arg"), &Main::_on_mnchar_mnchar_hit);
+
+ClassDB::bind_method(D_METHOD(
+  "_on_hud_reset_overall_stats"), &Main::_on_hud_reset_overall_stats);
+
 
   ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "packed_scene",
                             PROPERTY_HINT_RESOURCE_TYPE, "PackedScene"),
@@ -185,6 +193,7 @@ void Main::_on_hud_reset_overall_stats()
 // be helpful, for instance, following a practice run or some
 // other issue).
 {
+  UtilityFunctions::print("_on_hud_reset_overall_stats just got called.");
   overall_hits_achieved = TypedDictionary<String, int>{};
   overall_wins = TypedDictionary<String, int>{};
 
@@ -305,6 +314,7 @@ argument from the signal: ", players_to_include);
   // to this ID:
   Color mnchar_color_arg = mnchar_id_color_dict[mnchar_id_arg];
   Vector3 mnchar_translate_arg = mnchar_id_location_dict[mnchar_id_arg];
+  double mnchar_rotation_arg = mnchar_id_rotation_dict[mnchar_id_arg];
 
   // Adding a new mnchar to the scene:
   auto new_mnchar = reinterpret_cast<Mnchar *>(
@@ -323,14 +333,13 @@ argument from the signal: ", players_to_include);
   new_mnchar->connect("mnchar_hit", Callable(this, "_on_mnchar_mnchar_hit"));
 
   // Note that it doesn't seem necessary to mention 
-  // the mnchar_id or firing_mnchar_id propeorties of mnchar_hit 
+  // the mnchar_id or firing_mnchar_id properties of mnchar_hit 
   // within this code, as it will still successfully get picked up by 
   // the _on_mnchar_mnchar_hit function specified within Callable.
 
 
-
   new_mnchar->start(mnchar_id_arg, mnchar_color_arg, 
-  mnchar_translate_arg);
+  mnchar_translate_arg, mnchar_rotation_arg);
   add_child(new_mnchar);
 
 
