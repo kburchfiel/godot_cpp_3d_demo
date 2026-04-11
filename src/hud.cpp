@@ -64,6 +64,8 @@ if (can_launch_new_game == true) // We'll only want to enable
 
     if (message_time >= 2.0)
 {
+    // Since up to eight players might be present within this
+    // game, we'll iterate from 0 to 7 (inclusive).
     for (int i = 0; i < 8; i++)
 
     {
@@ -229,14 +231,24 @@ added to the game.\n";
     announce_winner = true;}
 
     else {announce_winner = false;}
+
+
+// Determining which message, if any, to show:
+
     
     if (announce_winner == true)
     {show_message(winner_message);}
 
     else if (can_launch_new_game == true)  
     // In this condition, the results of the previous game
-    // will still be shown, but we'll display instructions for
-    // launching a new game as well.
+    // will still be shown, but we'll also display instructions for
+    // launching a new game (along with a list of players that
+    // have been added thus far).
+    // We need to check for can_launch_new_game again here since
+    // it may have been modified by the previous code.
+    // (Only showing the following message within a 'false' condition
+    // prevents new-game instructions from getting shown during
+    // an active game.)
 
     {show_message(winner_message+instructions+added_players);}
 
