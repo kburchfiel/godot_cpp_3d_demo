@@ -39,9 +39,13 @@ public:
   void _on_mnchar_mnchar_hit(String hit_mnchar_id_arg, 
   String firing_mnchar_id_arg);
 
+  // For ending a game once fewer than 2 players are left:
   void end_game(String winning_mnchar_id);
 
-  int number_of_players = 0;
+  // For resetting a game in progress (and removing current-game
+  // stats from the overall_hits_achieved typed dictionary):
+  void _on_mnchar_reset_game();
+
 
 
 // The following TypedDictionary code was based on
@@ -113,19 +117,6 @@ TypedDictionary<String, double> mnchar_id_rotation_dict {
 
 // }
 
-// The following dictionary maps each ID to a name for its corresponding
-// color (defined within mnchar_id_color_dict). That will help
-// players understand which Mnchar a given player ID refers to.
-TypedDictionary<String, String> mnchar_id_color_name_dict {
-{String("0"), "Blue"},
-{String("1"), "Green"},
-{String("2"), "Cyan"},
-{String("3"), "Red"},
-{String("4"), "Magenta"},
-{String("5"), "Yellow"},
-{String("6"), "White"},
-{String("7"), "Black"}
-};
 
 // The following HashSet will keep a list of active players.
 // Once the size of this set becomes less than two, we can
@@ -148,6 +139,22 @@ TypedDictionary<String, int> hits_achieved {};
 // Creating two additional dictionaries that will store total
 // hit and win counts across games:
 TypedDictionary<String, int> overall_hits_achieved {};
+
+// Adding in the same color-name dictionary found within
+// hud.h: (I'm sure there's a way to eliminate the need to 
+// add in separate copies of these dictionaries.)
+TypedDictionary<String, String> mnchar_id_color_name_dict {
+{String("0"), "Blue"},
+{String("1"), "Green"},
+{String("2"), "Cyan"},
+{String("3"), "Red"},
+{String("4"), "Magenta"},
+{String("5"), "Yellow"},
+{String("6"), "White"},
+{String("7"), "Black"}
+};
+
+
 
 
 TypedDictionary<String, int> overall_wins {};

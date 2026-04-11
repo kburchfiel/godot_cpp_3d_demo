@@ -48,6 +48,8 @@ private:
   // etc; if it's 1, it would instead check for move_right_1,
   // move_left_1, and so on.)
 
+  double mnchar_game_reset_timer = 0.0;
+
 protected:
   static void _bind_methods();
 

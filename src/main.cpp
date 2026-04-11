@@ -19,12 +19,15 @@ void Main::_bind_methods() {
 
 // In order to successfully connect other nodes' signals to
 // functions within main.cpp, we need to make sure to bind the
-// relevant functions here.              
+// relevant main.cpp functions here.              
   ClassDB::bind_method(D_METHOD(
   "_on_mnchar_mnchar_hit", "hit_mnchar_id_arg"), &Main::_on_mnchar_mnchar_hit);
 
 ClassDB::bind_method(D_METHOD(
   "_on_hud_reset_overall_stats"), &Main::_on_hud_reset_overall_stats);
+
+ClassDB::bind_method(D_METHOD(
+  "_on_mnchar_reset_game"), &Main::_on_mnchar_reset_game);
 
 
   ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "packed_scene",
@@ -65,33 +68,40 @@ get_tree()->call_group("mnchars", "queue_free"); // This code,
 // mnchar_id_color_name_dict[winning_mnchar_id] to a String
 // prevents a compiler error related to an ambiguous conversion. 
 String new_winner_message = "The winning player \
-is: "+winning_mnchar_id + " (" + 
-String(mnchar_id_color_name_dict[winning_mnchar_id]) + ")\n\n";
+is: "+winning_mnchar_id;
 
+if (winning_mnchar_id != "Nobody")
+{
+new_winner_message += " (" + 
+String(mnchar_id_color_name_dict[winning_mnchar_id]) + ")\n\n";
+}
 
 // Reporting how many hits each player scored received:
-// (We could also iterate through the dictionary's keys here;
-// see update_constant_message() for an example of how 
-// to do so.)
-  for (int i = 0; i < number_of_players; i++)
-  // Remember that valid player IDs will range from 0 to 7--so,
-// for a 2-player game, we'll want i to iterate from 0 to 1 
-// (inclusive).
-// String::num_int64 converts a string into an integer. Using
-// String::num will instead convert it into a float, which
-// is problematic for cases like the following in which 
-// the output must equal an integer. 
-{String mnchar_id_arg = String::num_int64(i);
+
+Array hits_achieved_keys = hits_achieved.keys();
+
+for (int key_index = 0; 
+key_index < hits_achieved_keys.size(); key_index++)
+
+{
+// Determining how many hits each player achieved in this game:
+String mnchar_id_arg = String(hits_achieved_keys[key_index]);
+String current_id_hits_achieved = String::num_int64(
+hits_achieved[mnchar_id_arg]);
+
 new_winner_message += "Player " + mnchar_id_arg + " (" + 
 String(mnchar_id_color_name_dict[mnchar_id_arg]) + ")"
-+  " scored " + String::num_int64(hits_achieved[mnchar_id_arg]) 
-+ " hits.\n";
++  " scored " + current_id_hits_achieved + " hits.\n";
 }
+
+// String::num_int64 converts a string into an integer. Using
+// String::num will instead convert it into a float, which
+// is problematic for cases in which 
+// the output must equal an integer. 
 
 // Creating some space between this message and information
 // that will follow:
 new_winner_message += "\n\n";
-
 
 
 get_node<Hud>("Hud")->winner_message = new_winner_message;
@@ -104,6 +114,39 @@ get_node<Hud>("Hud")->players_to_include = Dictionary {};
 get_node<Hud>("Hud")->can_launch_new_game = true;
 
 
+}
+
+
+void Main::_on_mnchar_reset_game()
+{
+
+// This function allows us to move back to the player-selection
+// menu and to remove hits scored within the current game from
+// the overall-hits dictionary.
+
+Array hits_achieved_keys = hits_achieved.keys();
+
+for (int key_index = 0; 
+key_index < hits_achieved_keys.size(); key_index++)
+
+{
+// Determining how many hits each player achieved in this game:
+String current_id = String(hits_achieved_keys[key_index]);
+int current_id_hits_achieved = hits_achieved[current_id];
+
+// Removing these hits from the overall-hits dictionary:
+// (The player's ID will still be present in the dictionary,
+// but this shouldn't be an issue.)
+overall_hits_achieved[current_id] = int(
+overall_hits_achieved[current_id]) - current_id_hits_achieved;
+}
+
+// Updating the overall_hits_achieved dictionary present within
+// the HUD:
+update_constant_message();
+
+
+end_game("Nobody");
 }
 
 
@@ -137,48 +180,53 @@ update_constant_message();
 if (active_players.size() == 1)
 
 {
-// Checking to see who won: (We'll do so by iterating through all
-// 8 possible player IDs. There's most likely a simpler way to
-// implement this task.
-for (int i = 0; i < 8; i++) 
-{String mnchar_to_look_up = String::num_int64(i);
-UtilityFunctions::print(i);
-// Checking whether the output of find() matches that of (end). If 
-// it *doesn't*, we can conclude that this element is present 
-// within the vector, and thus the winner.
-// (I had learned about the has() function for arrays,
-// but was pleased to find out that it's also available for
-// sets. See
-// godot-cpp/include/godot_cpp/templates/hash_set.hpp )
-
-if (active_players.has(mnchar_to_look_up))
+// Checking to see who won:
+// Since there's only one character in this set, we can identify
+// the winning character by creating an iterator to the first
+// (and only) item in this set (using .begin()),
+// then dereferencing it to identify the winning ID.
+// For reference, see:
+// https://stackoverflow.com/a/12863273/13097194
+String winning_mnchar = *active_players.begin();
 
 
-// Alternative approach, based on 
-// https://www.geeksforgeeks.org/cpp/how-to-check-if-set-contains-an-element-in-cpp/ :
-// if (active_players.find(mnchar_to_look_up) != active_players.end())
 
 
-{
-  int current_overall_win_value = overall_wins[
-mnchar_to_look_up];
+// for (int i = 0; i < 8; i++) 
+// {String mnchar_to_look_up = String::num_int64(i);
+// UtilityFunctions::print(i);
+// // Checking whether the output of find() matches that of (end). If 
+// // it *doesn't*, we can conclude that this element is present 
+// // within the vector, and thus the winner.
+// // (I had learned about the has() function for arrays,
+// // but was pleased to find out that it's also available for
+// // sets. See
+// // godot-cpp/include/godot_cpp/templates/hash_set.hpp )
+
+// if (active_players.has(mnchar_to_look_up))
+
+
+// // Alternative approach, based on 
+// // https://www.geeksforgeeks.org/cpp/how-to-check-if-set-contains-an-element-in-cpp/ :
+// // if (active_players.find(mnchar_to_look_up) != active_players.end())
+
+int current_overall_win_value = overall_wins[
+winning_mnchar];
 current_overall_win_value += 1;
-overall_wins[mnchar_to_look_up] = current_overall_win_value;
+overall_wins[winning_mnchar] = current_overall_win_value;
 
 // Updating our overall stats to reflect this new hit:
 update_constant_message();
   
   
-  end_game (mnchar_to_look_up);
-break;}
+  end_game (winning_mnchar);
+
 
 }
 
-if (active_players.size() == 0) // In this case, no one won the game.
+else if (active_players.size() == 0) // In this case, no one won the game.
 {
 end_game("Nobody"); // 
-}
-
 }
 
 }
@@ -190,6 +238,8 @@ void Main::_ready() {
 // I wanted to demonstrate that it's possible to do so via code
 // as well.)
 get_node<Hud>("Hud")->connect("reset_overall_stats", Callable(this, "_on_hud_reset_overall_stats"));
+
+
 }
 
 void Main::_on_hud_reset_overall_stats()
@@ -335,10 +385,16 @@ String mnchar_id_arg = players_to_include_keys[key_index];
 
   new_mnchar->connect("mnchar_hit", Callable(this, "_on_mnchar_mnchar_hit"));
 
+
   // Note that it doesn't seem necessary to mention 
   // the mnchar_id or firing_mnchar_id properties of mnchar_hit 
   // within this code, as it will still successfully get picked up by 
   // the _on_mnchar_mnchar_hit function specified within Callable.
+
+// Performing a similar operation for the Mnchar class's 
+// reset_game signal:
+
+new_mnchar->connect("reset_game", Callable(this, "_on_mnchar_reset_game"));
 
 
   new_mnchar->start(mnchar_id_arg, mnchar_color_arg, 
@@ -398,6 +454,7 @@ UtilityFunctions::print(active_players.has(mnchar_to_look_up));
 UtilityFunctions::print("Printing out all active players in set:");
 for (auto active_players_iterator = active_players.begin();
 active_players_iterator != active_players.end(); ++active_players_iterator)
+// See: https://stackoverflow.com/a/12863273/13097194
 {
 UtilityFunctions::print(*active_players_iterator);
 }

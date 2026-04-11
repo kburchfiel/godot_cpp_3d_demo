@@ -26,8 +26,8 @@ public:
     bool announce_winner = false;
     Dictionary players_to_include;
 
-    // Creating a dictionary that can store for how long each player
-    // has continuously held down the reset button. (This will
+    // Creating a dictionary that can keep track of how long each 
+    // player has continuously held down the reset button. (This will
     // allow us to determine whether or not to reset the game's
     // overall stats.)
     TypedDictionary<String, double> id_reset_time_dict {{"0", 0.0},
@@ -37,6 +37,22 @@ public:
     {"4", 0.0},
     {"5", 0.0},
     {"6", 0.0}};
+
+// The following dictionary maps each ID to a name for its corresponding
+// color (defined within mnchar_id_color_dict). That will help
+// players understand which Mnchar a given player ID refers to.
+TypedDictionary<String, String> mnchar_id_color_name_dict {
+{String("0"), "Blue"},
+{String("1"), "Green"},
+{String("2"), "Cyan"},
+{String("3"), "Red"},
+{String("4"), "Magenta"},
+{String("5"), "Yellow"},
+{String("6"), "White"},
+{String("7"), "Black"}
+};
+
+
     Hud();
     ~Hud() = default;
     String winner_message {""};

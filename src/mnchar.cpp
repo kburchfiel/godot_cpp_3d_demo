@@ -47,6 +47,8 @@ ADD_SIGNAL(MethodInfo("mnchar_hit", PropertyInfo(
 Variant::STRING, "mnchar_id"), PropertyInfo(
 Variant::STRING, "firing_mnchar_id")));
 
+ADD_SIGNAL(MethodInfo("reset_game"));
+
 
   // Adding in code to retrieve our projectile scene so that the player can fire
   // bullets: (This code was based on
@@ -373,6 +375,27 @@ void Mnchar::_physics_process(double delta) {
 
     shoot_projectile();
   }
+
+
+// If the reset_overall_stats button is pressed for at least 3
+// seconds, a "reset_game" signal will be emitted (that 
+// a function in main.cpp can then use to stop the game).
+
+if (input->is_action_pressed("reset_overall_stats_" + mnchar_id)) {
+
+    mnchar_game_reset_timer += delta;
+  }
+else {
+
+    mnchar_game_reset_timer = 0;
+  }
+
+
+if (mnchar_game_reset_timer >= 3.0) {
+
+    emit_signal("reset_game");
+  }
+
 
   auto player_transform_basis_z =
       get_node<Node3D>("Pivot")->get_transform().get_basis()[2];

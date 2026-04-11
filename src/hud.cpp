@@ -79,9 +79,16 @@ if (can_launch_new_game == true) // We'll only want to enable
     // back later. Therefore, having each player specify that
     // he/she wants to be in this particular game is helpful.)
 
-    if (input->is_action_just_pressed("fire_"+strint)) 
+    if ((input->is_action_just_pressed("fire_"+strint)) &&
+    (announce_winner == false)) 
     // Adding a player ID that corresponds to this device ID to
     // players_to_include:
+
+    // (Checking for announce_winner prevents players from 
+    // accidentally adding themselves into this new game in the
+    // process of attempting to fire a projectile within a game
+    // that just ended.)
+
     // Note: an alternative approach would have been to add these
     // IDs to a HashSet. However, I don't think it's possible to
     // pass HashSets as arguments within signals, as they're
@@ -186,7 +193,29 @@ if (can_launch_new_game == true) // We'll only want to enable
 
     String instructions = "To enter this game, press Fire on \
 your controller.\nTo launch a game, press both Fire and Reset \
-simultaneously.\nTo reset the game, hold down Reset for two seconds.";
+simultaneously.\nTo reset the game, hold down Reset for \
+two seconds.\n\n";
+
+// Displaying which players have been added so far:
+
+String added_players = "";
+
+
+Array players_to_include_keys = players_to_include.keys();
+
+for (int key_index = 0; 
+key_index < players_to_include_keys.size(); key_index++)
+
+{
+String added_player = players_to_include_keys[key_index];
+
+added_players += "Player " + added_player + " (" + String(
+mnchar_id_color_name_dict[added_player]) + ") has been \
+added to the game.\n";
+
+}
+
+
     
     // Determining whether to prevent a new game from being started
     // until players have time to review the winner:
@@ -206,7 +235,7 @@ simultaneously.\nTo reset the game, hold down Reset for two seconds.";
     // will still be shown, but we'll display instructions for
     // launching a new game as well.
 
-    {show_message(winner_message+instructions);}
+    {show_message(winner_message+instructions+added_players);}
 
     // Based on https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.cpp
     // Note that this code works even though we instantiated Hud
