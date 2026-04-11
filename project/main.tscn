@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://cqow47bch5ocs"]
 
-[ext_resource type="PackedScene" uid="uid://dc3nje2ppsfhy" path="res://mnchar.tscn" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://c7uo25x7v18tn" path="res://hud.tscn" id="2_0xm2m"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ig7tw"]
@@ -10,7 +9,6 @@ size = Vector3(60, 2, 60)
 size = Vector3(60, 2, 60)
 
 [node name="Main" type="Main" unique_id=1443214972]
-packed_scene = ExtResource("1_0xm2m")
 
 [node name="Ground" type="StaticBody3D" parent="." unique_id=1722754095]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
@@ -34,5 +32,3 @@ transform = Transform3D(1, 0, 0, 0, 0.49999994, 0.86602545, 0, -0.86602545, 0.49
 current = true
 
 [node name="Hud" parent="." unique_id=567330388 instance=ExtResource("2_0xm2m")]
-
-[connection signal="start_game" from="Hud" to="." method="_on_hud_start_game"]

@@ -32,7 +32,7 @@ public:
 
   void _ready();
 
-  void _on_hud_start_game(int players_to_include);
+  void _on_hud_start_game(Dictionary players_to_include);
 
   void _on_hud_reset_overall_stats();
 

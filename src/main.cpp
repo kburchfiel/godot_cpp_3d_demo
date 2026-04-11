@@ -97,6 +97,10 @@ new_winner_message += "\n\n";
 get_node<Hud>("Hud")->winner_message = new_winner_message;
 get_node<Hud>("Hud")->message_time = 0; // Restarting the message
 // timer that will get utilized within Hud's _process() function
+
+// Clearing out the Hud class's players_to_include dictionary so that
+// a new set of players can be added:
+get_node<Hud>("Hud")->players_to_include = Dictionary {};
 get_node<Hud>("Hud")->can_launch_new_game = true;
 
 
@@ -108,7 +112,7 @@ get_node<Hud>("Hud")->can_launch_new_game = true;
 void Main::_on_mnchar_mnchar_hit(String hit_mnchar_id_arg,
 String firing_mnchar_id_arg) {
   UtilityFunctions::print(
-"Mnchar with an ID of ", hit_mnchar_id_arg, "was just hit by Mnchar \
+"Mnchar with an ID of ", hit_mnchar_id_arg, " was just hit by Mnchar \
 with an ID of ", firing_mnchar_id_arg);
 active_players.erase(hit_mnchar_id_arg);
 UtilityFunctions::print("Current size of active_players:", active_players.size());
@@ -278,13 +282,8 @@ get_node<Hud>("Hud")->show_constant_message(constant_message_text);
 }
 
 
-void Main:: _on_hud_start_game(int players_to_include)
+void Main:: _on_hud_start_game(Dictionary players_to_include)
 {
-
-
-number_of_players = players_to_include; // number_of_players
-// will be useful for iterating through dictionaries that contain
-// player information
 
 // Resetting our set of active players:
 active_players.clear();
@@ -302,13 +301,17 @@ hits_achieved = TypedDictionary<String, int>{};
   UtilityFunctions::print("Received the following players_to_include \
 argument from the signal: ", players_to_include);
 
-// Adding as many players to our scene as specified by players_to_include
-// (while also specifying unique IDs for them)
-  for (int i = 0; i < players_to_include; i++)
-  // Remember that valid player IDs will range from 0 to 7--so,
-// for a 2-player game, we'll want i to iterate from 0 to 1 
-// (inclusive).
-{String mnchar_id_arg = String::num_int64(i);
+// The following loop is based on
+// https://www.geeksforgeeks.org/cpp/different-ways-to-iterate-over-a-set-in-c/ .
+// See also:
+// https://stackoverflow.com/questions/12863256/how-to-iterate-stdset
+
+Array players_to_include_keys = players_to_include.keys();
+
+for (int key_index = 0; 
+key_index < players_to_include_keys.size(); key_index++)
+{
+String mnchar_id_arg = players_to_include_keys[key_index];
 
   // Determining the colors and translate values that correspond
   // to this ID:
@@ -382,9 +385,33 @@ UtilityFunctions::print(i);
 // https://www.geeksforgeeks.org/cpp/how-to-check-if-set-contains-an-element-in-cpp/
 // UtilityFunctions::print(active_players.find(mnchar_to_look_up) != active_players.end());
 
-// Simpler approach:
+// Simpler approach that I'm now using in place of the commented-out
+// one above:
 UtilityFunctions::print(active_players.has(mnchar_to_look_up));
 }
+
+//HashSet<String>::Iterator active_players_iterator = active_players.begin();
+
+
+// Note that you need to place the ++ operator before, rather than
+// after, active_players_iterator.
+UtilityFunctions::print("Printing out all active players in set:");
+for (auto active_players_iterator = active_players.begin();
+active_players_iterator != active_players.end(); ++active_players_iterator)
+{
+UtilityFunctions::print(*active_players_iterator);
+}
+
+
+// HashSet<String>::Iterator active_players_iterator = active_players.begin();
+
+// UtilityFunctions::print("Printing out all active players in set:");
+// while (active_players_iterator != active_players.end())
+// {
+// UtilityFunctions::print(*active_players_iterator);
+// ++active_players_iterator;
+// }
+
 
 update_constant_message();
 

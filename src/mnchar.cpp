@@ -358,7 +358,18 @@ void Mnchar::_physics_process(double delta) {
   // was held down.)
   // See:
   // godot-cpp/gen/include/godot_cpp/classes/input.hpp
-  if (input->is_action_just_pressed("fire_" + mnchar_id)) {
+
+  // To start a new game, players must press both their fire
+  // and reset_overall_stats buttons. Therefore, I updated the 
+  // following if statement to only allow a projectile to get fired
+  // reset_overall_stats is *not* being pressed. (Otherwise,
+  // the game would always start with a projectile being fired,
+  // which could give the firing player an advantage and/or distort
+  // any accuracy statistics that might be collected.)
+  if (
+    (input->is_action_just_pressed("fire_" + mnchar_id)) &&
+  (input->is_action_pressed(
+"reset_overall_stats_" + mnchar_id) == false)) {
 
     shoot_projectile();
   }

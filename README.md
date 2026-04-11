@@ -176,10 +176,16 @@ Therefore, I added in a new input (reset_overall_stats_0) that, when pressed con
 
 I also made several other improvements at this point. First, I added in a dictionary of color names (e.g. 'Blue', 'Green') that would allow players to identify the character corresponding to each ID. Second, I added in code that makes projectile colors equal to their firing characters' colors. Third, I added a dictionary of rotation values that allow all players to face towards the center of the screen.
 
+# Part 13: Creating a more flexible player selection setup
+
+I had previously specified the number of players to include in each round by having the first player choose
+a number between 2 and 8; however, this setup isn't that flexible, since players may want to sit some games out and then come back later. Therefore, I updated hud.cpp to allow players to add themselves to the game by clicking the Fire button on their controllers. That way, players can decide whether or not to join each game. 
+
+I also updated my code for resetting overall stats to allow any player, not just the first player, to reset these statistics. In addition, any player can now launch a game by pressing both the reset_overall_stats *and* fire buttons. (However, I still need to add in all of the corresponding button mappings within the editor.)
 
 ## Next steps (an incomplete list!)
 
-1. Add additional input_map settings that allow up to eight players to be supported.
+1. Add additional input_map settings (including movement, fire, and reset buttons) that allow up to eight players to be supported.
 
 1. Test out the game with eight controllers to make sure everything's functioning correctly.
 

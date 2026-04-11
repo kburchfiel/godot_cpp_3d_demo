@@ -6,6 +6,7 @@
 #pragma once
 
 #include <godot_cpp/classes/canvas_layer.hpp>
+#include <godot_cpp/variant/typed_dictionary.hpp>
 
 using namespace godot;
 
@@ -19,11 +20,23 @@ private:
     static void _bind_methods();
 
 public:
-    int players_to_include = 2;
     bool can_launch_new_game = true;
     double message_time = 0.0;
     double reset_overall_stats_time = 0.0;
     bool announce_winner = false;
+    Dictionary players_to_include;
+
+    // Creating a dictionary that can store for how long each player
+    // has continuously held down the reset button. (This will
+    // allow us to determine whether or not to reset the game's
+    // overall stats.)
+    TypedDictionary<String, double> id_reset_time_dict {{"0", 0.0},
+    {"1", 0.0},
+    {"2", 0.0},
+    {"3", 0.0},
+    {"4", 0.0},
+    {"5", 0.0},
+    {"6", 0.0}};
     Hud();
     ~Hud() = default;
     String winner_message {""};
