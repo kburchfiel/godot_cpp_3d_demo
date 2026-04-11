@@ -147,6 +147,7 @@ if (can_launch_new_game == true) // We'll only want to enable
         can_launch_new_game = false; // Prevents the Fire button from
         // restarting the game once it's active
         show_message(""); // Clears the message field.
+
         // The following signal will get picked up by main.cpp's
         // on_hud_start_game() function, which will use the 
         // players_to_include value to determine how many players
@@ -154,6 +155,7 @@ if (can_launch_new_game == true) // We'll only want to enable
         winner_message = ""; // Clears out the winner from the previous
         // game (if any)
         emit_signal("start_game", players_to_include);
+        break;
     };
 
 }
@@ -191,9 +193,9 @@ if (can_launch_new_game == true) // We'll only want to enable
     // https://www.reddit.com/r/godot/comments/u37sj1/comment/i4nrizz/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button )
 
 
-    String instructions = "To enter this game, press Fire on \
-your controller.\nTo launch a game, press both Fire and Reset \
-simultaneously.\nTo reset the game, hold down Reset for \
+    String instructions = "To join this game, press Fire on \
+your controller.\nTo launch a game, press both Fire and\nReset \
+simultaneously.\nTo reset overall stats, hold down Reset\nfor \
 two seconds.\n\n";
 
 // Displaying which players have been added so far:
@@ -231,7 +233,8 @@ added to the game.\n";
     if (announce_winner == true)
     {show_message(winner_message);}
 
-    else  // In this condition, the results of the previous game
+    else if (can_launch_new_game == true)  
+    // In this condition, the results of the previous game
     // will still be shown, but we'll display instructions for
     // launching a new game as well.
 

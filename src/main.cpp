@@ -73,8 +73,13 @@ is: "+winning_mnchar_id;
 if (winning_mnchar_id != "Nobody")
 {
 new_winner_message += " (" + 
-String(mnchar_id_color_name_dict[winning_mnchar_id]) + ")\n\n";
+String(mnchar_id_color_name_dict[
+winning_mnchar_id]) + ")";
 }
+
+new_winner_message += "\n\n";
+
+
 
 // Reporting how many hits each player scored received:
 
@@ -232,13 +237,17 @@ end_game("Nobody"); //
 }
 
 void Main::_ready() {
-// Connecting the HUD's overall-stats-reset signal to a corresponding
-// function within Main:
-// (This connection could also be done within the editor, but
+// Connecting the HUD's overall-stats-reset and start-game signals
+// to corresponding functions within Main:
+// (These connections could also be done within the editor, but
 // I wanted to demonstrate that it's possible to do so via code
-// as well.)
-get_node<Hud>("Hud")->connect("reset_overall_stats", Callable(this, "_on_hud_reset_overall_stats"));
-
+// as well. In addition, I found that these connected signals
+// would sometimes disappear from the editor--so connecting them
+// here saved me the trouble of periodically reconnecting them.)
+get_node<Hud>("Hud")->connect(
+  "reset_overall_stats", Callable(this, "_on_hud_reset_overall_stats"));
+get_node<Hud>("Hud")->connect(
+  "start_game", Callable(this, "_on_hud_start_game"));
 
 }
 
