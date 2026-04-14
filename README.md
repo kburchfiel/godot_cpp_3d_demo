@@ -183,13 +183,18 @@ a number between 2 and 8; however, this setup isn't that flexible, since players
 
 I also updated my code for resetting overall stats to allow any player, not just the first player, to reset these statistics. In addition, any player can now launch a game by pressing both the reset_overall_stats *and* fire buttons. (However, I still need to add in all of the corresponding button mappings within the editor.)
 
-## Next steps (an incomplete list!)
+# Part 14: Adding walls and inputs
 
-1. Add additional input_map settings (including movement, fire, and reset buttons) that allow up to eight players to be supported.
+Using [this answer by eagleDog](https://stackoverflow.com/a/79419758/13097194) as a reference, I added walls around my game area that would prevent players from being able to leave it. 
 
-1. Test out the game with eight controllers to make sure everything's functioning correctly.
+In addition, I began adding input settings for additional devices in order to accommodate my multiplayer setup. To reduce the number of repetitive steps needed to complete this project, I created a C++ script (available within this repository as /input_map_creator/input_map_creator.cpp) that would allow me to create duplicate input settings for each device ID. For more details on this approach, along with other required steps, see the input_map_creator.cpp file.
 
-1. Add boundaries (either visible or invisible) that prevent characters from leaving the game area.
+(To be honest, simply creating these inputs within the editor may have been simpler, as this process involved some busywork also. Nevertheless, getting to practice C++ is rarely a bad thing! :) 
+
+(Thanks to quentincaffeino on Reddit for helping inspire this approach: https://www.reddit.com/r/godot/comments/k4xcqh/comment/gebibku)
+
+
+
 
 ## Troubleshooting notes
 

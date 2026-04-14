@@ -147,7 +147,7 @@ void Mnchar::set_character_color(const Color character_color_arg) {
                              new_mncharbody_mesh_material);
 
 // NOTE: It's crucial that you activate the 'local to scene' feature
-// of the Mnchar's material. Otherwise, whenever you change the
+// of the Mnchar's material (and not just its MeshInstance3D). Otherwise, whenever you change the
 // material for one player, it will get changed for other players.
 // I am very grateful to Tobias Wink at
 // https://www.somethinglikegames.de/en/blog/2023/material-synchronization/

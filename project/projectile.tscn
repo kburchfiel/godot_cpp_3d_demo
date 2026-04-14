@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://ckhuieb6lfi2"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_akgne"]
+resource_local_to_scene = true
 albedo_color = Color(1, 0, 0, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_a85iw"]
