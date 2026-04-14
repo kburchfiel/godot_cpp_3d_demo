@@ -204,6 +204,11 @@ In addition, I began adding input settings for additional devices in order to ac
 
 Now that I had a working, 8-player game, I decided to finish up this project and revise my code. There are plenty of ways the code (and game) could further be extended and improved, but I figured that this would be a decent stopping point. My next step will be to create a step-by-step guide that can help newcomers (like myself!) to C++ in Godot to become familiar with the GDExtension system. 
 
+I hope that this project will prove useful in your own game-development endeavors!
+
+![](Screenshots/8_player_gameplay_screenshot.png)
+
+
 
 ## Troubleshooting notes
 
