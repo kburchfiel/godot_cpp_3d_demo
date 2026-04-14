@@ -6,7 +6,7 @@
 
 By Ken Burchfiel
 
-Released under the MIT License. (See LICENSE.md file for additional details)
+Released under the MIT License. (See LICENSE file for copyright information for other repositories whose code I incorporated into this project)
 
 *Note: I chose not to use generative AI tools to write this project's code or this Readme. It was important for me to understand what the code was doing, and I felt that LLMs would get in the way of that.*
 
@@ -34,7 +34,7 @@ I created this project primarily in order to learn how to use GDExtension, toget
 
 * My [C++-based Your First 2D Game tutorial (YF2DGC++)](https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/tree/main)--which is based heavily on [a similar tutorial by J-Dax for Godot 4.3](https://github.com/j-dax/gd-cpp). (That tutorial was released under the BSD 3-Clause license; my copy is released under the MIT license.)
 
-* Also of note is Vorlac's GDExtension documentation, available at https://vorlac.github.io/gdextension-docs/getting_started/quick-start/ . I ought to give this document a thorough read at some point, as it should help clarify many points of confusion! (Note, however, that at least some of it is AI-generated, so as Vorlac notes, it should be used with caution.)
+* Also of note is Vorlac's GDExtension documentation, available at https://vorlac.github.io/gdextension-docs/getting_started/quick-start/ . (Note that at least some of it is AI-generated, so as Vorlac notes, it should be used with caution. Because of this, I personally chose not to reference it much at all--but you may very well find it to be highly useful.)
 
 * The [example.cpp](https://github.com/godotengine/godot-cpp/blob/master/test/src/example.cpp) file within the godot-cpp repository proved extremely helpful as well.
 
