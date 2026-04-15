@@ -20,6 +20,16 @@ I created this project primarily in order to learn how to use GDExtension, toget
 
 *Note: I am still quite new to GDExtension, and my C++ skills are still developing as well--so this project and its corresponding source code likely have lots of room for improvement. However, they should still help both new and experienced developers become acquainted with C++ development in Godot. After all, an imperfect example is (generally) better than no example at all!*
 
+## Launching the game
+
+*From itch.io (https://kburchfiel.itch.io/cube-combat)*:
+
+​To run this game, download the .zip file (together with the Readme); unzip it; and double-click on the executable (godot_cpp_3d_demo.x86_64) in order to run it. At this point, an executable is only available for Linux.
+
+*From GitHub:*
+
+Clone this repository; copy a compiled version of the godot-cpp library (more on this below) into a 'godot-cpp' folder within the repository; and then compile this folder itself by running scons. (More on this below as well. Note: I haven't yet tested out this setup, but it *should* work.)
+
 ## Gameplay instructions
 
 ### Goal
