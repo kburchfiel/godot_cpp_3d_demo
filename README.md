@@ -1,12 +1,14 @@
 # Cube Combat
 
-*A 3D Godot demo created using C++*
+*A 3D 3rd-person shooter created in C++ using Godot 4.6 and GDExtension*
 
 ![](/Screenshots/gameplay_demo_smaller.gif)
 
 By Ken Burchfiel
 
 Released under the MIT License. (See LICENSE file for copyright information for other repositories whose code I incorporated into this project)
+
+**GitHub repository: https://github.com/kburchfiel/godot_cpp_3d_demo**
 
 *Note: I chose not to use generative AI tools to write this project's code or this Readme. It was important for me to understand what the code was doing, and I felt that LLMs would get in the way of that.*
 
@@ -67,23 +69,25 @@ This game, being multiplayer-only, is meant to be played with game controllers s
 
 (This list is incomplete; additional resources are mentioned within the code.)
 
-* [Version 4.6 of the Getting Started GDExtension documentation page (GDEGS)](https://docs.godotengine.org/en/4.6/tutorials/scripting/cpp/gdextension_cpp_example.html)
+* Version 4.6 of the Getting Started GDExtension documentation page (GDEGS): https://docs.godotengine.org/en/4.6/tutorials/scripting/cpp/gdextension_cpp_example.html
 
-* [Version 4.6 of the Your first 3D Game tutorial (YF3DG)](https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/index.html) 
+* Version 4.6 of the Your first 3D Game tutorial (YF3DG): https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/index.html
 
     This tutorial doesn't include C++ references, but its GDScript and C# code snippets provide valuable 'hints' about what C++ classes, methods, and functions to use. The instructions provided for setting up a 3D project within Godot were very helpful as well, of course.
 
-* [godot-cpp library (godot-cpp)](https://github.com/godotengine/godot-cpp) 
+* godot-cpp library (godot-cpp): https://github.com/godotengine/godot-cpp
 
     The *compiled* version of this library is an indispensable C++ reference.
 
-    Note: I used the latest master version of this repository available on 2026-03-06 (9ae37ac). This particular version can be found [at this link](https://github.com/godotengine/godot-cpp/tree/9ae37ac8b9b14df5284dc3d4bf87e7d8b3327503).
+    Note: I used the latest master version of this repository available on 2026-03-06 (9ae37ac). This particular version can be found at  https://github.com/godotengine/godot-cpp/tree/9ae37ac8b9b14df5284dc3d4bf87e7d8b3327503.
 
-* My [C++-based Your First 2D Game tutorial (YF2DGC++)](https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/tree/main)--which is based heavily on [a similar tutorial by J-Dax for Godot 4.3](https://github.com/j-dax/gd-cpp). (That tutorial was released under the BSD 3-Clause license; my copy is released under the MIT license.)
+* My C++-based Your First 2D Game tutorial (YF2DGC++): https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/tree/main 
+
+    This project is based heavily on a similar tutorial by J-Dax for Godot 4.3 (https://github.com/j-dax/gd-cpp). (That tutorial was released under the BSD 3-Clause license; my copy is released under the MIT license.)
 
 * Also of note is Vorlac's GDExtension documentation, available at https://vorlac.github.io/gdextension-docs/getting_started/quick-start/ . (Note that at least some of it is AI-generated, so as Vorlac notes, it should be used with caution. Because of this, I personally chose not to reference it much at all--but you may very well find it to be highly useful.)
 
-* The [example.cpp](https://github.com/godotengine/godot-cpp/blob/master/test/src/example.cpp) file within the godot-cpp repository proved extremely helpful as well.
+* The example.cpp (https://github.com/godotengine/godot-cpp/blob/master/test/src/example.cpp) file within the godot-cpp repository proved extremely helpful as well.
 
 
 ## Steps involved in creating this project
@@ -96,10 +100,11 @@ I should also note that I later revised certain updates--though I decided to kee
 
 For my initial setup, I started with the source code found in GDEGS, but then updated it to accommodate my 3D setup. For instance, rather than use a Sprite2D as the basis for my 'Mnchar' (main character) class, I used CharacterBody3D, as this was the class referenced in YF3DG. (More on this in the following section.) 
 
-After compiling my code, I updated my project within the Godot editor to include a floor; a camera; a light source; and a shape for the player. (I had created this shape for [a GDNative C++ project back in 2023](https://github.com/kburchfiel/godot_demo_3d_gdnative_cpp_project).) When I added my Mnchar class to the project, I confirmed that it moved in a somewhat-circular fashion as instructed by my code:
+After compiling my code, I updated my project within the Godot editor to include a floor; a camera; a light source; and a shape for the player. (I had created this shape for a GDNative C++ project back in 2023 (https://github.com/kburchfiel/godot_demo_3d_gdnative_cpp_project).) When I added my Mnchar class to the project, I confirmed that it moved in a somewhat-circular fashion as instructed by my code:
 
 ```
-Vector3 new_position = Vector3(10.0 + (10.0 * sin(time_passed * 2.0)), 10.0 + (10.0 * cos(time_passed * 1.5)), 0);
+Vector3 new_position = Vector3(10.0 + (10.0 * sin(
+time_passed * 2.0)), 10.0 + (10.0 * cos(time_passed * 1.5)), 0);
 ```
 
 (This code was based on similar code within GDEGS; I simply replaced 'Vector2' with 'Vector3' and added a 0 at the end to represent the third dimension.)
@@ -111,7 +116,7 @@ Here's what things looked like at this point:
 
 ### Part 2: Basic player movement
 
-To get the player to move, I translated some of the GDScript code found in the [Moving the player with code](https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html) section of YF3DG to C++. (The [player.cpp code within YF2DGC++](https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/player.cpp)--which is [mostly J-Dax's own code](https://github.com/j-dax/gd-cpp/blob/main/src/entity/player.cpp)--proved helpful here.) I skipped the jump-related code and simply worked on getting the player to move left, right, forward, back, and diagonally using the arrow keys. (I was also able to get the player to rotate in the direction of its movement.)
+To get the player to move, I translated some of the GDScript code found in the Moving the player with code (https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html) section of YF3DG to C++. (The player.cpp code within YF2DGC++ (https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/player.cpp)--which is mostly J-Dax's own code (https://github.com/j-dax/gd-cpp/blob/main/src/entity/player.cpp)--proved helpful here.) I skipped the jump-related code and simply worked on getting the player to move left, right, forward, back, and diagonally using the arrow keys. (I was also able to get the player to rotate in the direction of its movement.)
 
 This process also involved adding some movement commands to my project's input map as instructed by YF3DG.
 
@@ -122,7 +127,7 @@ I later modified this code to allow the player to strafe and rotate, thus freein
 
 ### Part 3: Setting up projectiles
 
-Since Godot's [Third Person Shooter](https://github.com/godotengine/tps-demo) demo uses the CharacterBody3D class for its bullets, I decided to do the same. (Since this is also the class on which my Mnchar (player) class is based, I copied and pasted my mnchar.h and mnchar.cpp code as a basis for my projectile code.)
+Since Godot's Third Person Shooter (https://github.com/godotengine/tps-demo) demo uses the CharacterBody3D class for its bullets, I decided to do the same. (Since this is also the class on which my Mnchar (player) class is based, I copied and pasted my mnchar.h and mnchar.cpp code as a basis for my projectile code.)
 
 I added lines of code for my new Projectile class (e.g. `#include "projectile.h"` and `GDREGISTER_CLASS(Projectile);` to register_types.cpp.
 
@@ -181,7 +186,7 @@ The following resources helped me figure out this approach:
 
 ### Part 5: Removing players upon collision with a projectile
 
-This step involved adding a `Mnchar::_on_projectile_detector_body_entered()` function within mnchar.cpp and mnchar.h; creating a new Area3D node within the Mnchar.tscn file in the editor and connecting its `on_body_entered` signal to this function (see screenshots below); and updating the collision layers and masks for the Mnchar and Projectile classes. (The [Jumping and squashing monsters](https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/06.jump_and_squash.html) section of Godot's Your First 3D Game tutorial proved very helpful here.)
+This step involved adding a `Mnchar::_on_projectile_detector_body_entered()` function within mnchar.cpp and mnchar.h; creating a new Area3D node within the Mnchar.tscn file in the editor and connecting its `on_body_entered` signal to this function (see screenshots below); and updating the collision layers and masks for the Mnchar and Projectile classes. (The Jumping and squashing monsters (https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/06.jump_and_squash.html) section of Godot's Your First 3D Game tutorial proved very helpful here.)
 
 ![](Screenshots/connecting_body_entered_signal.png)
 
@@ -243,7 +248,7 @@ I also updated my code for resetting overall stats to allow any player, not just
 
 ### Part 14: Adding walls and inputs
 
-Using [this answer by eagleDog](https://stackoverflow.com/a/79419758/13097194) as a reference, I added walls around my game area that would prevent players from being able to leave it. 
+Using a StackOverflow answer by eagleDog (https://stackoverflow.com/a/79419758/13097194) as a reference, I added walls around my game area that would prevent players from being able to leave it. 
 
 In addition, I began adding input settings for additional devices in order to accommodate my multiplayer setup. To reduce the number of repetitive steps needed to complete this project, I created a C++ script (available within this repository as /input_map_creator/input_map_creator.cpp) that would allow me to create duplicate input settings for each device ID. For more details on this approach, along with other required steps, see the input_map_creator.cpp file.
 
@@ -253,6 +258,7 @@ In addition, I began adding input settings for additional devices in order to ac
 
 
 Here's what the game looked like at this point:
+
 ![](Screenshots/8_player_gameplay_screenshot.png)
 
 Now that I had a working, 8-player game, I decided to finish up this project and revise my code. There are plenty of ways the code (and game) could further be extended and improved, but I figured that this would be a decent stopping point. My next step will be to create a step-by-step guide that can help newcomers (like myself!) to C++ in Godot to become familiar with the GDExtension system. 
@@ -262,8 +268,6 @@ I hope that this project will prove useful in your own game-development endeavor
 --Ken
 
 ![](/Screenshots/20260414_Ken.jpg)
-
-
 
 
 
