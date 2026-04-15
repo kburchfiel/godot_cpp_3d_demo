@@ -1,13 +1,12 @@
-// Modified version of the sample file found in 
+// Modified version of the sample file found in
 // https://docs.godotengine.org/en/4.6/tutorials/scripting/cpp/gdextension_cpp_example.html
 
 #include "register_types.h"
 
+#include "hud.h"
+#include "main.h"
 #include "mnchar.h"
 #include "projectile.h"
-#include "main.h"
-#include "hud.h"
-
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -16,31 +15,36 @@
 using namespace godot;
 
 void initialize_example_module(ModuleInitializationLevel p_level) {
-	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
-		return;
-	}
+  if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
+    return;
+  }
 
-	GDREGISTER_CLASS(Mnchar);
-	GDREGISTER_CLASS(Projectile);
-	GDREGISTER_CLASS(Main);
-	GDREGISTER_CLASS(Hud);
+  GDREGISTER_CLASS(Mnchar);
+  GDREGISTER_CLASS(Projectile);
+  GDREGISTER_CLASS(Main);
+  GDREGISTER_CLASS(Hud);
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {
-	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
-		return;
-	}
+  if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
+    return;
+  }
 }
 
 extern "C" {
 // Initialization.
-GDExtensionBool GDE_EXPORT example_library_init(GDExtensionInterfaceGetProcAddress p_get_proc_address, const GDExtensionClassLibraryPtr p_library, GDExtensionInitialization *r_initialization) {
-	godot::GDExtensionBinding::InitObject init_obj(p_get_proc_address, p_library, r_initialization);
+GDExtensionBool GDE_EXPORT
+example_library_init(GDExtensionInterfaceGetProcAddress p_get_proc_address,
+                     const GDExtensionClassLibraryPtr p_library,
+                     GDExtensionInitialization *r_initialization) {
+  godot::GDExtensionBinding::InitObject init_obj(p_get_proc_address, p_library,
+                                                 r_initialization);
 
-	init_obj.register_initializer(initialize_example_module);
-	init_obj.register_terminator(uninitialize_example_module);
-	init_obj.set_minimum_library_initialization_level(MODULE_INITIALIZATION_LEVEL_SCENE);
+  init_obj.register_initializer(initialize_example_module);
+  init_obj.register_terminator(uninitialize_example_module);
+  init_obj.set_minimum_library_initialization_level(
+      MODULE_INITIALIZATION_LEVEL_SCENE);
 
-	return init_obj.init();
+  return init_obj.init();
 }
 }

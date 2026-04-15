@@ -1,3 +1,6 @@
+// Source:
+// https://docs.godotengine.org/en/4.6/tutorials/scripting/cpp/gdextension_cpp_example.html
+
 #pragma once
 
 #include <godot_cpp/core/class_db.hpp>

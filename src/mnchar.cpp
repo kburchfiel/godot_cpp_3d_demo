@@ -1,6 +1,7 @@
 // Based in part on:
 // https://docs.godotengine.org/en/4.6/tutorials/scripting/cpp/gdextension_cpp_example.html
-// (But modified for my 3D game)
+// and:
+// https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/player.cpp
 
 #include "mnchar.h"
 #include <godot_cpp/core/class_db.hpp>
@@ -16,8 +17,8 @@
 #include "projectile.h"
 #include <godot_cpp/variant/utility_functions.hpp>
 
-#include <godot_cpp/classes/mesh_instance3d.hpp> 
 #include <godot_cpp/classes/base_material3d.hpp>
+#include <godot_cpp/classes/mesh_instance3d.hpp>
 
 #include <godot_cpp/classes/shader_material.hpp>
 #include <godot_cpp/classes/standard_material3d.hpp>
@@ -42,13 +43,12 @@ void Mnchar::_bind_methods() {
                        &Mnchar::set_mnchar_id);
   ADD_PROPERTY(PropertyInfo(Variant::STRING, "mnchar_id"), "set_mnchar_id",
                "get_mnchar_id");
-// The following call is based on similar code within hud.cpp.
-ADD_SIGNAL(MethodInfo("mnchar_hit", PropertyInfo(
-Variant::STRING, "mnchar_id"), PropertyInfo(
-Variant::STRING, "firing_mnchar_id")));
+  // The following call is based on similar code within hud.cpp.
+  ADD_SIGNAL(MethodInfo("mnchar_hit",
+                        PropertyInfo(Variant::STRING, "mnchar_id"),
+                        PropertyInfo(Variant::STRING, "firing_mnchar_id")));
 
-ADD_SIGNAL(MethodInfo("reset_game"));
-
+  ADD_SIGNAL(MethodInfo("reset_game"));
 
   // Adding in code to retrieve our projectile scene so that the player can fire
   // bullets: (This code was based on
@@ -78,17 +78,9 @@ void Mnchar::set_projectile_scene(Ref<PackedScene> packed_scene) {
   projectile_scene = packed_scene;
 }
 
-Mnchar::Mnchar() {
-  // Initialize any variables here.
-  // time_passed = 0.0; // Based on GDExtension 4.6 demo
-  // movement_speed = 14; // Already set within mnchar.h
-  // Based on
-  // https://docs.godotengine.org/en/4.6/tutorials/scripting/cpp/gdextension_cpp_example.html
-}
+Mnchar::Mnchar() {}
 
-Mnchar::~Mnchar() {
-  // Add your cleanup here.
-}
+Mnchar::~Mnchar() {}
 
 // The code for set_movement_speed() and get_movement_speed()
 // is based on the set_amplitude() and get_amplitude()
@@ -143,29 +135,24 @@ void Mnchar::set_character_color(const Color character_color_arg) {
   get_node<Node3D>("Pivot")
       ->get_node<MeshInstance3D>("MncharBody")
       ->get_mesh()
-      ->surface_set_material(0,
-                             new_mncharbody_mesh_material);
+      ->surface_set_material(0, new_mncharbody_mesh_material);
 
-// NOTE: It's crucial that you activate the 'local to scene' feature
-// of the Mnchar's material (and not just its MeshInstance3D). Otherwise, whenever you change the
-// material for one player, it will get changed for other players.
-// I am very grateful to Tobias Wink at
-// https://www.somethinglikegames.de/en/blog/2023/material-synchronization/
-// for helping me solve this!
+  // NOTE: It's crucial that you activate the 'local to scene' feature
+  // of the Mnchar's material (and not just its MeshInstance3D). Otherwise,
+  // whenever you change the material for one player, it will get changed for
+  // other players. I am very grateful to Tobias Wink at
+  // https://www.somethinglikegames.de/en/blog/2023/material-synchronization/
+  // for helping me solve this!
+  // (You'll need to perform the same steps when configuring your
+  // projectile scene; otherwise, all projectiles will be the same
+  // color as the player who most recently fired one.)
 }
 
 String Mnchar::get_mnchar_id() const { return mnchar_id; }
 
-// For some reason, the following code isn't working--I'll need
-// to debug this further.
-// TypedDictionary<String, Vector3> id_location_tdict;
-
-// id_location_tdict[String("0")] = Vector3(20, 0, -20);
-// id_location_tdict[String("1")] = Vector3(-20, 0, -20);
-
 void Mnchar::start(String mnchar_id_arg, Color mnchar_color_arg,
-Vector3 mnchar_translate_arg, double mnchar_rotation_arg) {
-  // This function will specify the ID, 
+                   Vector3 mnchar_translate_arg, double mnchar_rotation_arg) {
+  // This function will specify the ID,
   // color, and starting location for each Mnchar--thus making
   // it easier to differentiate each Mnchar instance
   // from each other.
@@ -185,13 +172,10 @@ Vector3 mnchar_translate_arg, double mnchar_rotation_arg) {
   // of the actual Mnchar class weren't getting changed
   // and were thus overlapping with one another. (This caused
   // them to shoot up in the sky, which was both frustrating
-  // and hilarious haha)
+  // and hilarious!)
 
-  // UtilityFunctions::print("Done!");
-
-   get_node<Node3D>("Pivot")->rotate_object_local(
-      Vector3(0, 1, 0), mnchar_rotation_arg);
-
+  get_node<Node3D>("Pivot")->rotate_object_local(Vector3(0, 1, 0),
+                                                 mnchar_rotation_arg);
 }
 
 void Mnchar::shoot_projectile()
@@ -232,7 +216,7 @@ void Mnchar::shoot_projectile()
   // we want to move the projectile in front of the Mnchar's field
   // of view rather than the game area itself.
 
-    auto mncharbody_mesh_material = get_node<Node3D>("Pivot")
+  auto mncharbody_mesh_material = get_node<Node3D>("Pivot")
                                       ->get_node<MeshInstance3D>("MncharBody")
                                       ->get_mesh()
                                       ->surface_get_material(0);
@@ -240,9 +224,7 @@ void Mnchar::shoot_projectile()
   BaseMaterial3D *mncharbody_mesh_material_3d =
       Object::cast_to<BaseMaterial3D>(*mncharbody_mesh_material);
 
-
   Color projectile_color_arg = mncharbody_mesh_material_3d->get_albedo();
-
 
   projectile->start(projectile_transform, mnchar_id, projectile_color_arg);
   // Based on:
@@ -251,63 +233,47 @@ void Mnchar::shoot_projectile()
   // In order for our bullets to actually appear, we also need to
   // add them to our parent scene (e.g. main.tscn).
 
-  
-
-
   get_parent()->add_child(projectile);
   // See
   // https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-get-parent
   // and
   // https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-add-child
-
-  
-  }
-
+}
 
 void Mnchar::_on_projectile_detector_body_entered(Node3D *node) {
   UtilityFunctions::print(
       "on_body_entered() just got called within mnchar.cpp.");
 
-// Converting this node to a Projectile so that we can access
-// the ID of its firing player:
-// (This step would most likely fail if items other than projectiles
-// entered a projectile detector. However, I believe that correctly
-// setting my layer and mask options within the editor can help
-// ensure that only projectile entries will cause this function
-// to get called.)
+  // Converting this node to a Projectile so that we can access
+  // the ID of its firing player:
+  // (This step would most likely fail if items other than projectiles
+  // entered a projectile detector. However, I believe that correctly
+  // setting my layer and mask options within the editor can help
+  // ensure that only projectile entries will cause this function
+  // to get called.)
 
-Projectile* node_as_projectile =
-      Object::cast_to<Projectile>(node);
+  Projectile *node_as_projectile = Object::cast_to<Projectile>(node);
+  // This Object::cast_to<>() call was based on a similar call
+  // that I used in the Material-update section of this script.
 
-String firing_mnchar_id = node_as_projectile->get_firing_mnchar_id();
+  String firing_mnchar_id = node_as_projectile->get_firing_mnchar_id();
 
-// UtilityFunctions::print("node's firing_mnchar_id:", 
-//   node_as_projectile->get_firing_mnchar_id());
+  // UtilityFunctions::print("node's firing_mnchar_id:",
+  //   node_as_projectile->get_firing_mnchar_id());
 
-emit_signal("mnchar_hit", mnchar_id, firing_mnchar_id);
-
+  emit_signal("mnchar_hit", mnchar_id, firing_mnchar_id);
 
   queue_free(); // This function is based on
   // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/entity/mob.cpp
   // and
   // https://docs.godotengine.org/en/stable/classes/class_node.html#class-node-method-queue-free
-  // We may not actually need the *node argument here, since
-  // we're not making any updates to the node itself.
   // In order for this function to respond to collisions with
   // projectiles, but *not* the ground or the player itself,
   // you'll need to update the layer and mask items within
   // the editor. See README for more details.
-
 }
 
 void Mnchar::_physics_process(double delta) {
-
-  // if (get_mnchar_id() == "0")
-  // {set_character_color(Color(1.0, 0.0, 0.0, 1));}
-
-  // else if (get_mnchar_id() == "1")
-  // {set_character_color(Color(0.0, 1.0, 0.0, 1));}
-
   // UtilityFunctions::print("mnchar_id is:", get_mnchar_id());
 
   // The following code allows the player to rotate, strafe,
@@ -339,6 +305,11 @@ void Mnchar::_physics_process(double delta) {
   // https://docs.godotengine.org/en/stable/tutorials/2d/2d_movement.html and
   // https://github.com/godotrecipes/characterbody3d_examples/blob/master/mini_tank.gd
 
+  // Note the inclusion of mnchar_id; this allows us to check for input
+  // *only* from the device corresponding to the player's ID.
+  // (Without this setup, any player's commands would cause all other
+  // players' positions to get updated!)
+
   x_direction =
       input->get_axis("move_left_" + mnchar_id, "move_right_" + mnchar_id);
   z_direction =
@@ -362,40 +333,34 @@ void Mnchar::_physics_process(double delta) {
   // godot-cpp/gen/include/godot_cpp/classes/input.hpp
 
   // To start a new game, players must press both their fire
-  // and reset_overall_stats buttons. Therefore, I updated the 
+  // and reset_overall_stats buttons. Therefore, I updated the
   // following if statement to only allow a projectile to get fired
   // reset_overall_stats is *not* being pressed. (Otherwise,
   // the game would always start with a projectile being fired,
   // which could give the firing player an advantage and/or distort
   // any accuracy statistics that might be collected.)
-  if (
-    (input->is_action_just_pressed("fire_" + mnchar_id)) &&
-  (input->is_action_pressed(
-"reset_overall_stats_" + mnchar_id) == false)) {
+  if ((input->is_action_just_pressed("fire_" + mnchar_id)) &&
+      (input->is_action_pressed("reset_overall_stats_" + mnchar_id) == false)) {
 
     shoot_projectile();
   }
 
+  // If the reset_overall_stats button is pressed for at least 3
+  // seconds, a "reset_game" signal will be emitted (which
+  // a function in main.cpp can then use to stop the game).
 
-// If the reset_overall_stats button is pressed for at least 3
-// seconds, a "reset_game" signal will be emitted (that 
-// a function in main.cpp can then use to stop the game).
-
-if (input->is_action_pressed("reset_overall_stats_" + mnchar_id)) {
+  if (input->is_action_pressed("reset_overall_stats_" + mnchar_id)) {
 
     mnchar_game_reset_timer += delta;
-  }
-else {
+  } else {
 
     mnchar_game_reset_timer = 0;
   }
 
-
-if (mnchar_game_reset_timer >= 3.0) {
+  if (mnchar_game_reset_timer >= 3.0) {
 
     emit_signal("reset_game");
   }
-
 
   auto player_transform_basis_z =
       get_node<Node3D>("Pivot")->get_transform().get_basis()[2];
@@ -406,7 +371,8 @@ if (mnchar_game_reset_timer >= 3.0) {
   // I'm not sure why, but multiplying the x and z components
   // of the x and z bases, respectively, by -1 was critical for getting
   // the movement code to work. (I first found this out in the process
-  // of creating my projectile code.)
+  // of creating my projectile code. This might be because I have
+  // my player or game scene facing backwards!)
 
   player_transform_basis_x.x *= -1;
 
@@ -461,4 +427,3 @@ if (mnchar_game_reset_timer >= 3.0) {
 
   move_and_slide();
 }
-

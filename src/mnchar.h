@@ -1,4 +1,4 @@
-// Based on:
+// Based in part on
 // https://docs.godotengine.org/en/4.6/tutorials/scripting/cpp/gdextension_cpp_example.html
 // (But modified for my 3D game)
 
@@ -30,8 +30,7 @@ private:
   // See:
   // https://docs.godotengine.org/en/4.6/getting_started/first_3d_game/03.player_movement_code.html
   double movement_speed = 14; // In meters per second
-  // Placed in the private category following the example found at
-  // // Based on
+  // Based on
   // https://docs.godotengine.org/en/4.6/tutorials/scripting/cpp/gdextension_cpp_example.html
   Ref<PackedScene> projectile_scene; // Based on:
   // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/main.h
@@ -39,14 +38,28 @@ private:
 
   Color character_color = Color(0.5, 0.5, 0.5, 1);
 
-  String mnchar_id = "0"; // Added to (hopefully) assist with multiplayer
-  // code. (My idea is to assign different IDs to different Mnchar
-  // instances, either in the editor or (eventually) via code),
-  // then have different controllers work for different players
-  // depending on their ID. (For example, if the player's ID is
-  // 0, the code would then check for move_right_0, move_left_0,
-  // etc; if it's 1, it would instead check for move_right_1,
-  // move_left_1, and so on.)
+  String mnchar_id =
+      "0"; /* Added to assist with multiplayer
+code. (My strategy is to assign different IDs to different Mnchar
+instances via code, then have different controllers affect
+different players depending on their ID. (For example, if
+the player's ID is 0, the code will then check for move_right_0,
+move_left_0, etc; if it's 1, it would instead check for move_right_1,
+move_left_1, and so on.)
+
+The following resources helped me figure out this approach:
+
+https://www.reddit.com/r/godot/comments/13ikz4u/best_way_to_handle_controller_input_for_local/
+
+https://github.com/remram44/godot-multiplayer-example
+
+https://www.gdquest.com/library/split_screen_coop/
+
+https://godotassetlibrary.com/asset/QdddqG/multiplayer-input
+
+https://kidscancode.org/godot_recipes/3.x/2d/splitscreen_demo/index.html
+
+*/
 
   double mnchar_game_reset_timer = 0.0;
 
@@ -88,10 +101,11 @@ public:
   // . I also found a body_entered reference with a Node3D type at
   // godot-cpp/gdextension/extension_api-4-5.json .
 
-
-  void  start(String mnchar_id_arg, Color mnchar_color_arg, 
-    Vector3 mnchar_translate_arg, double mnchar_rotation_arg); // Defining a function that will run right when
-                                 // a Mnchar object appears. See
+  void start(String mnchar_id_arg, Color mnchar_color_arg,
+             Vector3 mnchar_translate_arg,
+             double mnchar_rotation_arg); // Defining a function that will run
+                                          // right when
+  // a Mnchar object appears. See
   // https://gamedev.stackexchange.com/questions/207050/what-is-the-difference-between-onready-and-ready
 };
 

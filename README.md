@@ -12,9 +12,56 @@ Released under the MIT License. (See LICENSE file for copyright information for 
 
 ## Introduction
 
-Cube Combat is a 3D 3rd-person-shooter game that supports between two to eight players. It is coded entirely in C++ using Godot's GDExtension feature and the godot-cpp (https://github.com/godotengine/godot-cpp) library.
+Cube Combat is a 3D 3rd-person-shooter game that supports two to eight players (all of whom can watch the game on the same screen). It is coded entirely in C++ using Godot's GDExtension feature and the godot-cpp (https://github.com/godotengine/godot-cpp) library.
 
 I created this project primarily in order to learn how to use GDExtension, together with Godot 4.6, to create a game in C++. Now that the project is more or less complete, I hope it can be a useful resource for other newcomers to C++ in Godot. 
+
+*Note: I am still quite new to GDExtension, and my C++ skills are still developing as well--so this project and its corresponding source code likely have lots of room for improvement. However, they should still help both new and experienced developers become acquainted with C++ development in Godot. After all, an imperfect example is (generally) better than no example at all!*
+
+## Gameplay instructions
+
+### Goal
+
+In this 3rd-person-shooter game, your goal is to outlast all other players. This will involve both hitting other players and avoiding their own projectiles. It only takes one hit to remove a player from the map, so be careful!
+
+The game will also keep track of each player's overall win and hit count, though these can also be reset as needed (see below).
+
+### Controls
+
+This game, being multiplayer-only, is meant to be played with game controllers such as Nintendo Switch Pro Controllers (which I used for testing purposes). The keyboard commands built into the input map are really just meant for development and debugging.
+
+(The following commands may vary among controllers. You can of update them within the Godot editor as needed.)
+
+#### Within the player-selection menu
+
+* Right trigger: Join a game
+
+* Launch a game: Hold down left and right trigger at the same time
+
+* Holding down the left trigger for two or more seconds will reset all overall hit and win stats.
+
+* Note: If you accidentally add a player to the game, simply launch and reset the game to return to this menu. (See below for more details)
+
+### Within a live game
+
+* Fire: Right trigger. (This command will not work if the left trigger is also being held down.)
+
+* Move forward and back: Left joystick (up/down)
+
+* Strafe left and right: Left joystick (left/right)
+
+* Rotate left and right: Right joystick (left/right)
+
+* Holding down the left trigger for three or more seconds will return you to the player-selection menu while removing all hits scored in the current game from the overall-stats dictionary.
+
+### Tips
+
+* When first starting a round, I suggest launching a practice round so that everyone can get acquainted with his or her controls. You can then reset out of this round (without having it affect your stats) by holding down the left trigger for three or more seconds.
+
+* There are currently no limits on (1) how quickly you can fire projectiles or (2) how many you can fire within a game. I might update these settings within future versions of the game, though.
+
+* There's no music--but feel free to play your own tracks in the background!
+
 
 ## References and resources I used to create this project
 
@@ -41,7 +88,9 @@ I created this project primarily in order to learn how to use GDExtension, toget
 
 ## Steps involved in creating this project
 
-(Note: More details on the code, including additional documentation and relevant links, can be found within the src/ folder. I also plan to create a more detailed step-by-step guide at some point in the future in order to make this project easier for others to replicate.)
+(Note: More details on the code, including additional documentation and relevant links, can be found within the src/ folder. I also plan to create a more detailed step-by-step guide at some point in the future in order to make this project easier for others to replicate.
+
+I should also note that I later revised certain updates--though I decided to keep their original content in place here to provide a more realistic look at the development process.)
 
 ### Part 1: Initial setup
 
@@ -49,11 +98,11 @@ For my initial setup, I started with the source code found in GDEGS, but then up
 
 After compiling my code, I updated my project within the Godot editor to include a floor; a camera; a light source; and a shape for the player. (I had created this shape for [a GDNative C++ project back in 2023](https://github.com/kburchfiel/godot_demo_3d_gdnative_cpp_project).) When I added my Mnchar class to the project, I confirmed that it moved in a somewhat-circular fashion as instructed by my code:
 
-    ```
-    Vector3 new_position = Vector3(10.0 + (10.0 * sin(time_passed * 2.0)), 10.0 + (10.0 * cos(time_passed * 1.5)), 0);
-    ```
+```
+Vector3 new_position = Vector3(10.0 + (10.0 * sin(time_passed * 2.0)), 10.0 + (10.0 * cos(time_passed * 1.5)), 0);
+```
 
-    (This code was based on similar code within GDEGS; I simply replaced 'Vector2' with 'Vector3' and added a 0 at the end to represent the third dimension.)
+(This code was based on similar code within GDEGS; I simply replaced 'Vector2' with 'Vector3' and added a 0 at the end to represent the third dimension.)
 
 Here's what things looked like at this point:
 
@@ -202,11 +251,19 @@ In addition, I began adding input settings for additional devices in order to ac
 
 (Thanks to quentincaffeino on Reddit for helping inspire this approach: https://www.reddit.com/r/godot/comments/k4xcqh/comment/gebibku)
 
+
+Here's what the game looked like at this point:
+![](Screenshots/8_player_gameplay_screenshot.png)
+
 Now that I had a working, 8-player game, I decided to finish up this project and revise my code. There are plenty of ways the code (and game) could further be extended and improved, but I figured that this would be a decent stopping point. My next step will be to create a step-by-step guide that can help newcomers (like myself!) to C++ in Godot to become familiar with the GDExtension system. 
 
 I hope that this project will prove useful in your own game-development endeavors!
 
-![](Screenshots/8_player_gameplay_screenshot.png)
+--Ken
+
+![](/Screenshots/20260414_Ken.jpg)
+
+
 
 
 
@@ -244,11 +301,11 @@ I hope that this project will prove useful in your own game-development endeavor
 
 * If you're trying to add a new GDExtension scene, you'll need to make sure that all the nodes referenced by that scene are present within your code. For instance, before you can make the Hud class the root node of hud.tscn, you'll need to make sure to have a Label named 'Message' present as a child of your root node. 
 
-This might seem like a Catch 22: how can you create a child of a root Hud node if you can't add the Hud node to begin with? The solution is to make the class that your GDExtension class extends (CanvasLayer, in the case of Hud) the root node of the scene; add all child nodes referenced by the code to it; and *then* switch the extended class to a Hud class. (You can do so by right-clicking on the extended class (e.g. CanvasLayer); selecting 'Change Type'; and then selecting your GDExtension class. You may then want to rename the class to your GDExtension class in order to avoid any confusion.)
+    This might seem like a Catch 22: how can you create a child of a root Hud node if you can't add the Hud node to begin with? The solution is to make the class that your GDExtension class extends (CanvasLayer, in the case of Hud) the root node of the scene; add all child nodes referenced by the code to it; and *then* switch the extended class to a Hud class. (You can do so by right-clicking on the extended class (e.g. CanvasLayer); selecting 'Change Type'; and then selecting your GDExtension class. You may then want to rename the class to your GDExtension class in order to avoid any confusion.)
 
 * If the Godot editor doesn't appear to know about a newly-created GDExtension class, try restarting it. If it still doesn't appear, make sure you've added a reference to this class within your register_types.cpp file. (For instance, to get a custom Hud class to appear, make sure to (1) add `GDREGISTER_CLASS(Hud)` within register_types.cpp's initialization function (called `initialize_example_module()` in this project) and (2) add `#include "hud.h"` within your list of include statements.
 
-* If one or more of your GDExtension classes suddenly show up as missing within the editor (as indicated by red Xs next to their name), you might have an issue with one of the functions that you've bound as a method (or its corresponding `bind_method()` function). Try commenting out such functions as needed until the class reappears within Godot, then revise your code as needed. (In one case, I had forgotten to add `Main::` or `Mnchar::` before one of my bound functions in its .cpp file--which then caused all of my classes to fail to load. Adding that text back in resolved the issue.)
+* If one or more of your GDExtension classes suddenly show up as missing within the editor (as indicated by red Xs next to their name), you might have an issue with one of the functions that you've bound as a method (or its corresponding `bind_method()` function). Try commenting out such functions as needed until the class reappears within Godot, then revise your code as needed. (In one case, I had forgotten to add `Main::` before one of my bound functions in main.cpp file--which then caused all of my classes to fail to load. Adding that text back in resolved the issue.)
 
 ## Finding C++ code equivalents to GDScript code
 
@@ -262,11 +319,25 @@ Since YF3DG has GDScript and C# (but not C++) code excerpts, I first needed to d
 
 Using these files, I was able to confirm that this class is also titled CharacterBody3D within the C++ API. I also confirmed that this class has the `move_and_slide()` function referenced within YF3DG. (A content search for `move_and_slide` would also have helped me locate the character_body3d.cpp file.)
 
+Once you become more familiar with the godot-cpp library, you may be able to bypass the process of looking up GDScript code by going directly to a particular source file of interest. For instance, to learn how to erase an entry from a HashSet, you can simply go to godot-cpp/include/godot_cpp/templates/hash_set.hpp and check for a relevant method or function (e.g. '`erase()`'). In many cases, a function for a GDExtension type may be similar to a C++ STL function (as is the case with `erase()`: see https://en.cppreference.com/w/cpp/container/set/erase.html .)
+
+Remember that a given function might be available within a class's parent. For example, you won't find `has()` within typed_dictionary.hpp, but you *will* find it within `dictionary.hpp` (godot-cpp/gen/include/godot_cpp/variant/dictionary.hpp).
+
 Certain C++ API code, however, may not have any GDScript equivalent. In that case, you may need to instead look at the reference information for the Godot Engine's own source code--or directly at the code itself. For example, the Core Types page (https://docs.godotengine.org/en/stable/engine_details/architecture/core_types.html) was a huge help when adding dictionaries and sets into my code.
 
 Of course, existing code that makes use of the C++ API can be very useful as well. For instance, the source code for the 'test' section of the godot-cpp project (https://github.com/godotengine/godot-cpp/tree/master/test/src), such as the example.cpp file (https://github.com/godotengine/godot-cpp/blob/master/test/src/example.cpp), was a lifesaver when I was trying to figure out how to get a TypedDictionary to work with my project. See the 'References and resources' section near the top of this page for more examples.
 
+The gdnative-gdextension channel within the Godot-engine Discord (https://discord.com/invite/godotengine) is another great resource to bookmark. I'm very grateful to the participants who helped clarify the questions I asked of them there.
 
+## Don't give up!
+
+I certainly went through periods of frustration when working on this project. The game would crash without my understanding why; a seemingly-simple update took much longer than expected to implement; documentation on essential processes seemed hard to come by. However, as time went on, I found my confidence with C++--and my understanding of the editor--slowly building. 
+
+My personal belief is that these challenges are actually a crucial step towards gaining expertise in the language. It would have been nice to find answers right away, of course, but the hours I spent on debugging and testing helped me become much more acquainted with the editor. Plus, it felt *so good* once things finally worked!
+
+So, if you find yourself going through challenges and frustrations of your own, don't give up--and remember that those challenges will make you a stronger developer in the end.
+
+Saint Carlo Acutis, Pray for Us!
 
 
 

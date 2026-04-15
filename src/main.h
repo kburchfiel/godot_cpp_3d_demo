@@ -4,13 +4,13 @@
 
 #pragma once
 
+#include <cmath>
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/packed_scene.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
-#include <godot_cpp/variant/typed_dictionary.hpp>
-#include <godot_cpp/templates/hash_set.hpp>
 #include <godot_cpp/core/math_defs.hpp>
-#include <cmath>
+#include <godot_cpp/templates/hash_set.hpp>
+#include <godot_cpp/variant/typed_dictionary.hpp>
 
 using namespace godot;
 
@@ -36,8 +36,8 @@ public:
 
   void _on_hud_reset_overall_stats();
 
-  void _on_mnchar_mnchar_hit(String hit_mnchar_id_arg, 
-  String firing_mnchar_id_arg);
+  void _on_mnchar_mnchar_hit(String hit_mnchar_id_arg,
+                             String firing_mnchar_id_arg);
 
   // For ending a game once fewer than 2 players are left:
   void end_game(String winning_mnchar_id);
@@ -46,119 +46,92 @@ public:
   // stats from the overall_hits_achieved typed dictionary):
   void _on_mnchar_reset_game();
 
+  // The following TypedDictionary code was based on
+  // https://docs.godotengine.org/en/stable/engine_details/architecture/core_types.html
+  // , https://github.com/godotengine/godot-cpp/blob/master/test/src/example.cpp
+  // , and my understanding of std::map initialization options.
 
+  TypedDictionary<String, Vector3> mnchar_id_location_dict{
+      {String("0"), Vector3(15, 0, -20)},  {String("1"), Vector3(-15, 0, 20)},
+      {String("2"), Vector3(-20, 0, -15)}, {String("3"), Vector3(20, 0, 15)},
+      {String("4"), Vector3(-5, 0, -20)},  {String("5"), Vector3(5, 0, 20)},
+      {String("6"), Vector3(-20, 0, 5)},   {String("7"), Vector3(20, 0, -5)}};
 
-// The following TypedDictionary code was based on
-// https://docs.godotengine.org/en/stable/engine_details/architecture/core_types.html ,  
-// https://github.com/godotengine/godot-cpp/blob/master/test/src/example.cpp ,
-// and my understanding of std::map initialization options.
+  // The following dictionary specifies the starting rotation of
+  // each character. These rotations allow each character to face
+  // towards the center of the game area.
+  // I initally multiplied each value by
+  // the quotient of Math_PI (which I found in math_defs.hpp) and
+  // 180 converts degree arguments into radians. However, I then
+  // realized that it would be possible to simplify these entries
+  // further.
 
-  TypedDictionary<String, Vector3> mnchar_id_location_dict {
-{String("0"), Vector3(15, 0, -20)},
-{String("1"), Vector3(-15, 0, 20)},
-{String("2"), Vector3(-20, 0, -15)},
-{String("3"), Vector3(20, 0, 15)},
-{String("4"), Vector3(-5, 0, -20)},
-{String("5"), Vector3(5, 0, 20)},
-{String("6"), Vector3(-20, 0, 5)},
-{String("7"), Vector3(20, 0, -5)}
-};
+  TypedDictionary<String, double> mnchar_id_rotation_dict{
+      {String("0"), 0},           {String("1"), Math_PI},
+      {String("2"), Math_PI / 2}, {String("3"), Math_PI / -2},
+      {String("4"), 0},           {String("5"), Math_PI},
+      {String("6"), Math_PI / 2}, {String("7"), Math_PI / -2},
+  };
 
-// The following dictionary specifies the starting rotation of 
-// each character. These rotations allow each character to face
-// towards the center of the game area. 
-// I initally multiplied each value by
-// the quotient of Math_PI (which I found in math_defs.hpp) and
-// 180 converts degree arguments into radians. However, I then
-// realized that it would be possible to simplify these entries
-// further.
+  // For the color dict, I simply treated colors as 3-bit binary
+  // numbers, then incremented them up by one bit (except that
+  // I started at (0, 0, 1) rather than (0, 0, 0).
 
-TypedDictionary<String, double> mnchar_id_rotation_dict {
-{String("0"), 0},
-{String("1"), Math_PI},
-{String("2"), Math_PI/2},
-{String("3"), Math_PI/-2},
-{String("4"), 0},
-{String("5"), Math_PI},
-{String("6"), Math_PI/2},
-{String("7"), Math_PI/-2},
-};
+  TypedDictionary<String, Color> mnchar_id_color_dict{
+      {String("0"), Color(0, 0, 1, 1)}, {String("1"), Color(0, 1, 0, 1)},
+      {String("2"), Color(0, 1, 1, 1)}, {String("3"), Color(1, 0, 0, 1)},
+      {String("4"), Color(1, 0, 1, 1)}, {String("5"), Color(1, 1, 0, 1)},
+      {String("6"), Color(1, 1, 1, 1)}, {String("7"), Color(0, 0, 0, 1)}};
 
+  // Note: You can also add values to typed dictionaries using
+  // the [] operator, but this must be done within a function
+  // (to the best of my knowledge). Example:
 
-// For the color dict, I simply treated colors as 3-bit binary
-// numbers, then incremented them up by one bit (except that 
-// I started at (0, 0, 1) rather than (0, 0, 0).
+  // TypedDictionary<String, Vector3> gen_id_location_tdict() {
 
-  TypedDictionary<String, Color> mnchar_id_color_dict {
-{String("0"), Color(0, 0, 1, 1)},
-{String("1"), Color(0, 1, 0, 1)},
-{String("2"), Color(0, 1, 1, 1)},
-{String("3"), Color(1, 0, 0, 1)},
-{String("4"), Color(1, 0, 1, 1)},
-{String("5"), Color(1, 1, 0, 1)},
-{String("6"), Color(1, 1, 1, 1)},
-{String("7"), Color(0, 0, 0, 1)}
-};
+  // TypedDictionary<String, Vector3> id_location_tdict;
 
-// Note: You can also add values to typed dictionaries using
-// the [] operator, but this must be done within a function
-// (to the best of my knowledge). Example:
+  // // Note: The following code will *not* work outside of a function
+  // // (at least based on my tests).
+  // id_location_tdict[String("0")] = Vector3(20, 0, -20);
+  // id_location_tdict[String("1")] = Vector3(-20, 0, -20);
 
-// TypedDictionary<String, Vector3> gen_id_location_tdict() {
+  // return id_location_tdict;
 
-// TypedDictionary<String, Vector3> id_location_tdict;
+  // }
 
-// // Note: The following code will *not* work outside of a function
-// // (at least based on my tests).
-// id_location_tdict[String("0")] = Vector3(20, 0, -20);
-// id_location_tdict[String("1")] = Vector3(-20, 0, -20);
+  // The following HashSet will keep a list of active players.
+  // Once the size of this set becomes less than two, we can
+  // determine which player (if any) won the game.
+  // (If two players hit each other at exactly the same time,
+  // the length of this set will become 0, and no winner will be
+  // declared.)
 
-// return id_location_tdict;
+  // See
+  // https://docs.godotengine.org/en/stable/engine_details/architecture/core_types.html
+  // , and
+  // https://github.com/godotengine/godot/blob/master/core/templates/hash_set.h
+  // , and godot-cpp/include/godot_cpp/templates/hash_set.hpp
 
-// }
+  HashSet<String> active_players{};
 
+  // Creating another TypedDictionary that will keep track of how many
+  // hits each player has achieved so far:
+  TypedDictionary<String, int> hits_achieved{};
 
-// The following HashSet will keep a list of active players.
-// Once the size of this set becomes less than two, we can
-// determine which player (if any) won the game.
-// (If two players hit each other at exactly the same time,
-// the length of this set will become 0, and no winner will be
-// declared.)
+  // Creating two additional dictionaries that will store total
+  // hit and win counts across games:
+  TypedDictionary<String, int> overall_hits_achieved{};
 
-// See https://docs.godotengine.org/en/stable/engine_details/architecture/core_types.html ,
-// and https://github.com/godotengine/godot/blob/master/core/templates/hash_set.h ,
-// and godot-cpp/include/godot_cpp/templates/hash_set.hpp 
+  // Adding in the same color-name dictionary found within
+  // hud.h: (I'm sure there's a way to eliminate the need to
+  // add in separate copies of these dictionaries.)
+  TypedDictionary<String, String> mnchar_id_color_name_dict{
+      {String("0"), "Blue"},  {String("1"), "Green"},   {String("2"), "Cyan"},
+      {String("3"), "Red"},   {String("4"), "Magenta"}, {String("5"), "Yellow"},
+      {String("6"), "White"}, {String("7"), "Black"}};
 
-HashSet<String> active_players {};
+  TypedDictionary<String, int> overall_wins{};
 
-
-// Creating another TypedDictionary that will keep track of how many
-// hits each player has achieved so far:
-TypedDictionary<String, int> hits_achieved {};
-
-// Creating two additional dictionaries that will store total
-// hit and win counts across games:
-TypedDictionary<String, int> overall_hits_achieved {};
-
-// Adding in the same color-name dictionary found within
-// hud.h: (I'm sure there's a way to eliminate the need to 
-// add in separate copies of these dictionaries.)
-TypedDictionary<String, String> mnchar_id_color_name_dict {
-{String("0"), "Blue"},
-{String("1"), "Green"},
-{String("2"), "Cyan"},
-{String("3"), "Red"},
-{String("4"), "Magenta"},
-{String("5"), "Yellow"},
-{String("6"), "White"},
-{String("7"), "Black"}
-};
-
-
-
-
-TypedDictionary<String, int> overall_wins {};
-
-void update_constant_message();
-
+  void update_constant_message();
 };
