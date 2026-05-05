@@ -121,7 +121,7 @@ time_passed * 2.0)), 10.0 + (10.0 * cos(time_passed * 1.5)), 0);
 
 Here's what things looked like at this point:
 
-![](/Screenshots/Initial_Setup.png)
+![](/Screenshots/initial_setup.png)
 
 
 ### Part 2: Basic player movement
@@ -277,7 +277,7 @@ I hope that this project will prove useful in your own game-development endeavor
 
 --Ken
 
-![](/Screenshots/20260414_Ken.jpg)
+![](/Screenshots/20260414_ken.jpg)
 
 
 

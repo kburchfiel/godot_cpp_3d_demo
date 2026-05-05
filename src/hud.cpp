@@ -2,7 +2,6 @@
 // https://github.com/kburchfiel/cpp_yf2dg_gd_4pt_6/blob/main/src/scene/hud.cpp
 
 #include "hud.h"
-
 #include "main.h"
 #include <godot_cpp/classes/button.hpp>
 #include <godot_cpp/classes/input.hpp>

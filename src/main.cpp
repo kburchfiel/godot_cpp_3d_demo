@@ -326,7 +326,7 @@ whenever one of these two dictionaries is changed.
     constant_message_text +=
         "Player " + String(overall_wins_keys[key_index]) + " (" +
         String(mnchar_id_color_name_dict[String(
-            overall_hits_achieved_keys[key_index])]) +
+            overall_wins_keys[key_index])]) +
         "): " + String::num_int64(overall_wins[overall_wins_keys[key_index]]) +
         "\n";
   }
