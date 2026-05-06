@@ -38,7 +38,7 @@ public:
   // overall stats.)
   TypedDictionary<String, double> id_reset_time_dict{
       {"0", 0.0}, {"1", 0.0}, {"2", 0.0}, {"3", 0.0},
-      {"4", 0.0}, {"5", 0.0}, {"6", 0.0}};
+      {"4", 0.0}, {"5", 0.0}, {"6", 0.0}, {"7", 0.0}};
 
   // The following dictionary maps each ID to a name for its corresponding
   // color (defined within mnchar_id_color_dict). That will help
