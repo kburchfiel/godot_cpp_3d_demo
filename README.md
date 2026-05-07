@@ -1,3 +1,5 @@
+**Note: A newer version of this project, with more detailed step-by-step instructions, is available at https://github.com/kburchfiel/godot_cpp_3d_tutorial .**
+
 # Cube Combat
 
 *A 3D 3rd-person shooter created in C++ using Godot 4.6 and GDExtension*
