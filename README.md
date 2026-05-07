@@ -351,7 +351,7 @@ My personal belief is that these challenges are actually a crucial step towards 
 
 So, if you find yourself going through challenges and frustrations of your own, don't give up--and remember that those challenges will make you a stronger developer in the end.
 
-Saint Carlo Acutis, Pray for Us!
+Saint Carlo Acutis, Pray for us!
 
 
 
